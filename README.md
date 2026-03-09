@@ -34,6 +34,32 @@ bun run dev   # ou npm run dev
 
 Acesse http://localhost:4321
 
+## Criar um novo site a partir do boilerplate
+
+1. **Clone o f8** (ou baixe do seu repositório):
+   ```bash
+   git clone <url-do-repo-f8> meu-novo-site
+   cd meu-novo-site
+   ```
+
+2. **Instale e rode a captura**:
+   ```bash
+   bun install
+   bun run dev:full   # ou: bun run capture-server (term 1) + bun run dev (term 2)
+   ```
+
+3. **Cole a URL do site de referência** na homepage e clique em Capturar. As screenshots vão para `public/reference/`.
+
+4. **Construa o template** com base nas imagens (ou com IA).
+
+5. **Suba para outro repo** — crie um novo repositório no GitHub para esse site e faça o push:
+   ```bash
+   git remote set-url origin https://github.com/SEU-USUARIO/meu-novo-site.git
+   git push -u origin main
+   ```
+
+Cada novo site PBN = clone do f8 → captura do template → customização → push para repo próprio.
+
 ## Personalização
 
 1. **src/config.ts** - Nome do site, descrição, nicho, URL, redes sociais
