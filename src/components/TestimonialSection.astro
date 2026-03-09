@@ -1,0 +1,20 @@
+---
+/**
+ * Testimonial - 4.9/5 Trusted by genius people
+ */
+---
+
+<section class="py-24 px-6 border-t border-dark-700 bg-dark-900">
+  <div class="max-w-4xl mx-auto text-center">
+    <p class="font-display text-5xl md:text-6xl text-accent font-bold mb-4">4.9/5</p>
+    <h2 class="font-display text-3xl md:text-4xl text-white mb-8">Trusted by genius people.</h2>
+    <blockquote class="text-white/70 text-lg italic mb-8">
+      "Working with was an outstanding experience."
+    </blockquote>
+    <div class="flex justify-center gap-2">
+      {[1, 2, 3].map((i) => (
+        <span class:list={['w-2 h-2 rounded-full', i === 1 ? 'bg-accent' : 'bg-white/30']}></span>
+      ))}
+    </div>
+  </div>
+</section>

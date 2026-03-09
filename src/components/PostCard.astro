@@ -20,18 +20,18 @@ const formattedDate = pubDate?.toLocaleDateString('pt-BR', {
 });
 ---
 
-<article class="post-card">
+<article class="border-b border-dark-700 pb-8">
   {image && (
-    <a href={`/blog/${slug}/`} class="post-card-image">
-      <img src={image} alt={title} />
+    <a href={`/blog/${slug}/`} class="block rounded-xl overflow-hidden mb-4">
+      <img src={image} alt={title} class="w-full h-48 object-cover hover:scale-105 transition-transform" />
     </a>
   )}
-  <div class="post-card-content">
-    <time datetime={pubDate.toISOString()}>{formattedDate}</time>
-    <h2>
-      <a href={`/blog/${slug}/`}>{title}</a>
+  <div>
+    <time datetime={pubDate.toISOString()} class="text-white/50 text-sm">{formattedDate}</time>
+    <h2 class="mt-2">
+      <a href={`/blog/${slug}/`} class="font-display text-xl text-white hover:text-accent transition-colors">{title}</a>
     </h2>
-    {description && <p>{description}</p>}
-    <a href={`/blog/${slug}/`} class="read-more">Ler mais →</a>
+    {description && <p class="text-white/60 mt-2">{description}</p>}
+    <a href={`/blog/${slug}/`} class="inline-block mt-3 text-accent hover:underline text-sm">Ler mais →</a>
   </div>
 </article>

@@ -9,11 +9,11 @@ import config from '../../config';
 ---
 
 <BaseLayout title={`Blog | ${config.siteName}`} description={config.siteDescription}>
-  <main class="max-w-4xl mx-auto px-4 py-12">
-    <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-8">
+  <main class="max-w-4xl mx-auto px-6 pt-32 pb-24">
+    <h1 class="font-display text-5xl text-white mb-12">
       Blog
     </h1>
-    <div class="grid gap-8 md:grid-cols-2">
+    <div class="grid gap-12 md:grid-cols-2">
       {(await getCollection('posts'))
         .filter((p) => !p.data.draft)
         .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())

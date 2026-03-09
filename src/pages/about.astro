@@ -1,0 +1,29 @@
+---
+/**
+ * About - página sobre nós
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { siteConfig } from '../config';
+---
+
+<BaseLayout title="About Us" description="Sobre a agência">
+  <section class="pt-32 pb-24 px-6">
+    <div class="max-w-3xl mx-auto">
+      <h1 class="font-display text-5xl md:text-6xl text-white mb-8">About Us</h1>
+      <p class="text-white/80 text-lg mb-6">
+        Somos uma agência independente de design web e branding. Creating timeless brands that inspire.
+      </p>
+      <p class="text-white/60 mb-12">
+        We believe a website isn't just a digital presence — it's a powerful tool that tells your story. We have industry experience, and win awards.
+      </p>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {siteConfig.services.map((s) => (
+          <div>
+            <h3 class="font-display text-xl text-white mb-2">{s.title}</h3>
+            <p class="text-white/60 text-sm">{s.description}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>

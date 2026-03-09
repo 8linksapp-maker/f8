@@ -25,15 +25,15 @@ const { Content } = await post.render();
   title={`${post.data.title} | ${config.siteName}`}
   description={post.data.description || post.data.title}
 >
-  <main class="max-w-3xl mx-auto px-4 py-12">
-    <article class="prose prose-lg dark:prose-invert max-w-none">
+  <main class="max-w-3xl mx-auto px-6 pt-32 pb-24">
+    <article class="prose prose-lg prose-invert max-w-none">
       <header class="mb-8">
-        <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+        <h1 class="font-display text-4xl md:text-5xl text-white mb-4">
           {post.data.title}
         </h1>
         <time
           datetime={post.data.pubDate.toISOString()}
-          class="text-gray-500 dark:text-gray-400"
+          class="text-white/50"
         >
           {post.data.pubDate.toLocaleDateString('pt-BR', {
             day: 'numeric',

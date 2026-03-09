@@ -112,17 +112,26 @@ Para conectar este site à 8links como site da rede (PBN):
 
 A bridge recebe os posts da 8links e faz push no Git. O deploy é disparado automaticamente.
 
-## Captura de referência (screenshots)
+## Referências — Upload de tema ou captura por URL
 
-A página inicial permite capturar screenshots de qualquer site para usar como referência na construção do template.
+A página `/capture` oferece duas opções:
 
-**Como usar:**
-1. Em um terminal: `bun run capture-server` (ou `bun run capture-api`)
-2. Em outro: `bun run dev`
-3. Acesse http://localhost:4321, cole a URL e clique em Capturar
-4. As imagens são salvas em `public/reference/`
+### 1. Upload de tema (recomendado)
 
-**Requisito:** Bun (`bun install` na raiz) e Puppeteer (Chromium incluído — nada mais a instalar)
+Baixe o tema HTML (ex: ThemeForest), zip o arquivo e faça upload. O tema é extraído para `public/themes/current/` e fica disponível para personalização (tradução, customização).
+
+**Fluxo:**
+1. `bun run capture-server` + `bun run dev`
+2. Acesse http://localhost:4321/capture
+3. Selecione o .zip e clique em **Enviar tema**
+4. Clique em **Personalizar tema** para ver o preview
+5. Edite os arquivos em `public/themes/current/` para traduzir e customizar
+
+### 2. Captura por URL (alternativo)
+
+Extrai screenshots, HTML e CSS de uma URL para referência.
+
+**Requisito:** Bun e Puppeteer (Chromium incluído)
 
 ## Scripts
 

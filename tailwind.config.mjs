@@ -5,18 +5,20 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: {
-          50: '#eff6ff',
-          100: '#dbeafe',
-          200: '#bfdbfe',
-          300: '#93c5fd',
-          400: '#60a5fa',
-          500: '#3b82f6',
-          600: '#2563eb',
-          700: '#1d4ed8',
-          800: '#1e40af',
-          900: '#1e3a8a',
+        accent: {
+          DEFAULT: '#a3e635',
+          hover: '#84cc16',
         },
+        dark: {
+          950: '#0a0a0a',
+          900: '#111111',
+          800: '#1a1a1a',
+          700: '#262626',
+        },
+      },
+      fontFamily: {
+        display: ['Funnel Display', 'system-ui', 'sans-serif'],
+        body: ['Mozilla Text', 'Inter', 'system-ui', 'sans-serif'],
       },
     },
   },

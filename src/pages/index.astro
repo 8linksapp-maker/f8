@@ -1,120 +1,50 @@
 ---
 /**
- * Página inicial do f8 - Ferramenta de captura de referência
- * Campo para URL → captura screenshots viewport a viewport → salva em public/reference/
- * Use as imagens como referência para construir o template com IA
+ * Homepage - tema Mivon Creative Agency (baseado em referência extraída)
+ * Hero, Intro, Stats, Services, Portfolio, Team, Testimonials, Contact CTA
  */
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import IntroSection from '../components/IntroSection.astro';
+import StatsSection from '../components/StatsSection.astro';
+import ServicesSection from '../components/ServicesSection.astro';
+import PortfolioSection from '../components/PortfolioSection.astro';
+import TeamSection from '../components/TeamSection.astro';
+import TestimonialSection from '../components/TestimonialSection.astro';
+import ContactSection from '../components/ContactSection.astro';
 import { siteConfig } from '../config';
 ---
 
-<BaseLayout
-  title={`Capturar referência | ${siteConfig.siteName}`}
-  description="Capture screenshots de qualquer site para usar como referência na construção do template"
->
-  <main class="max-w-4xl mx-auto px-4 py-12">
-    <section class="mb-12">
-      <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-        Capturar referência
-      </h1>
-      <p class="text-gray-600 dark:text-gray-300 mb-8">
-        Cole a URL do site que deseja replicar. As screenshots serão salvas em{' '}
-        <code class="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded text-sm">public/reference/</code>{' '}
-        para você usar na construção do template.
-      </p>
+<BaseLayout title={siteConfig.siteName} description={siteConfig.siteDescription}>
+  <Hero />
+  <IntroSection />
+  <StatsSection />
+  <ServicesSection />
+  <PortfolioSection />
+  <TeamSection />
+  <TestimonialSection />
+  <ContactSection />
 
-      <form id="capture-form" class="flex flex-col sm:flex-row gap-4">
-        <input
-          type="url"
-          id="url-input"
-          name="url"
-          placeholder="https://exemplo.com"
-          required
-          class="flex-1 px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-        />
-        <button
-          type="submit"
-          id="capture-btn"
-          class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          Capturar
-        </button>
-      </form>
-
-      <div id="capture-status" class="mt-4 text-sm text-gray-500 dark:text-gray-400 hidden"></div>
-      <div id="capture-error" class="mt-4 text-sm text-red-600 dark:text-red-400 hidden"></div>
-    </section>
-
-    <section id="gallery-section" class="hidden">
-      <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-        Screenshots capturadas
-      </h2>
-      <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">
-        Imagens salvas em <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded">public/reference/</code> — use como referência para a IA construir o template.
-      </p>
-      <div id="gallery" class="grid gap-4 md:grid-cols-2">
-        <!-- Preenchido via JS -->
-      </div>
-    </section>
-  </main>
+  <a href="#" id="scroll-top" class="fixed bottom-8 right-8 w-12 h-12 flex items-center justify-center rounded-full bg-white/10 border border-white/30 text-white hover:bg-white hover:text-dark-900 transition-colors opacity-0 pointer-events-none z-50" aria-label="Voltar ao topo">
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+    </svg>
+  </a>
 
   <script>
-    const API_URL = 'http://localhost:3001';
-    const form = document.getElementById('capture-form') as HTMLFormElement;
-    const urlInput = document.getElementById('url-input') as HTMLInputElement;
-    const captureBtn = document.getElementById('capture-btn') as HTMLButtonElement;
-    const statusEl = document.getElementById('capture-status') as HTMLDivElement;
-    const errorEl = document.getElementById('capture-error') as HTMLDivElement;
-    const gallerySection = document.getElementById('gallery-section') as HTMLElement;
-    const gallery = document.getElementById('gallery') as HTMLDivElement;
-
-    form?.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const url = urlInput.value.trim();
-      if (!url) return;
-
-      captureBtn.disabled = true;
-      statusEl.classList.remove('hidden');
-      statusEl.textContent = 'Capturando... Aguarde.';
-      errorEl.classList.add('hidden');
-      gallerySection.classList.add('hidden');
-
-      try {
-        const res = await fetch(`${API_URL}/api/capture`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ url }),
-        });
-
-        const data = await res.json();
-
-        if (!res.ok) {
-          throw new Error(data.error || `Erro ${res.status}`);
+    const scrollBtn = document.getElementById('scroll-top');
+    if (scrollBtn) {
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 400) {
+          scrollBtn.classList.remove('opacity-0', 'pointer-events-none');
+        } else {
+          scrollBtn.classList.add('opacity-0', 'pointer-events-none');
         }
-
-        statusEl.textContent = `Pronto! ${data.files.length} screenshot(s) salvas em public/reference/`;
-        renderGallery(data.files);
-        gallerySection.classList.remove('hidden');
-      } catch (err: unknown) {
-        const msg = err instanceof Error ? err.message : 'Erro ao capturar';
-        errorEl.textContent = `⚠️ ${msg}. Certifique-se de que o servidor de captura está rodando (bun run capture-server).`;
-        errorEl.classList.remove('hidden');
-      } finally {
-        captureBtn.disabled = false;
-      }
-    });
-
-    function renderGallery(files: string[]) {
-      gallery.innerHTML = files
-        .map(
-          (f) => `
-        <div class="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden bg-gray-50 dark:bg-gray-800">
-          <img src="/reference/${f}?t=${Date.now()}" alt="${f}" class="w-full h-auto" loading="lazy" />
-          <p class="p-2 text-xs text-gray-500 dark:text-gray-400 truncate">${f}</p>
-        </div>
-      `
-        )
-        .join('');
+      });
+      scrollBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
     }
   </script>
 </BaseLayout>

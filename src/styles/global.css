@@ -1,33 +1,24 @@
 /**
- * Estilos globais do boilerplate 8links
- * Customize cores, tipografia e espaçamentos conforme o tema do site
+ * Estilos globais - tema Mivon Creative Agency
+ * Tema escuro minimalista com acento lime/green
+ * Fontes: Funnel Display, Mozilla Text
  */
+@import url('https://fonts.googleapis.com/css2?family=Funnel+Display:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Mozilla+Text:wght@200;300;400;500;600;700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --color-bg: #ffffff;
-  --color-text: #1a1a1a;
-  --color-text-muted: #666;
-  --color-accent: #2563eb;
-  --color-accent-hover: #1d4ed8;
-  --color-border: #e5e7eb;
-  --font-sans: system-ui, -apple-system, sans-serif;
-  --font-serif: Georgia, serif;
-  --max-width: 720px;
-  --spacing: 1.5rem;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-bg: #0f172a;
-    --color-text: #f1f5f9;
-    --color-text-muted: #94a3b8;
-    --color-accent: #60a5fa;
-    --color-accent-hover: #93c5fd;
-    --color-border: #334155;
-  }
+  --color-bg: #0a0a0a;
+  --color-bg-elevated: #111111;
+  --color-text: #ffffff;
+  --color-text-muted: #a3a3a3;
+  --color-accent: #a3e635;
+  --color-accent-hover: #84cc16;
+  --color-border: #262626;
+  --font-display: 'Funnel Display', system-ui, sans-serif;
+  --font-body: 'Mozilla Text', 'Inter', system-ui, sans-serif;
 }
 
 * {
@@ -36,188 +27,12 @@
 
 body {
   margin: 0;
-  font-family: var(--font-sans);
+  font-family: var(--font-body);
   background: var(--color-bg);
   color: var(--color-text);
   line-height: 1.6;
 }
 
-.container {
-  max-width: var(--max-width);
-  margin: 0 auto;
-  padding: 0 var(--spacing) calc(var(--spacing) * 3);
-}
-
-/* Header */
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: var(--spacing) var(--spacing) * 2;
-  border-bottom: 1px solid var(--color-border);
-}
-
-.logo {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--color-text);
-  text-decoration: none;
-}
-
-.logo:hover {
-  color: var(--color-accent);
-}
-
-.nav {
-  display: flex;
-  gap: 1.5rem;
-}
-
-.nav a {
-  color: var(--color-text-muted);
-  text-decoration: none;
-}
-
-.nav a:hover {
-  color: var(--color-accent);
-}
-
-/* Footer */
-.footer {
-  margin-top: calc(var(--spacing) * 4);
-  padding: calc(var(--spacing) * 2) var(--spacing);
-  border-top: 1px solid var(--color-border);
-}
-
-.footer-content {
-  max-width: var(--max-width);
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing);
-  text-align: center;
-}
-
-.footer-content p {
-  margin: 0;
-  color: var(--color-text-muted);
-  font-size: 0.875rem;
-}
-
-.footer-nav {
-  display: flex;
-  justify-content: center;
-  gap: 1.5rem;
-}
-
-.footer-nav a {
-  color: var(--color-text-muted);
-  text-decoration: none;
-  font-size: 0.875rem;
-}
-
-.footer-nav a:hover {
-  color: var(--color-accent);
-}
-
-/* Post cards */
-.post-card {
-  padding: calc(var(--spacing) * 2) 0;
-  border-bottom: 1px solid var(--color-border);
-}
-
-.post-card:last-child {
-  border-bottom: none;
-}
-
-.post-card-image {
-  display: block;
-  margin-bottom: var(--spacing);
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-.post-card-image img {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-}
-
-.post-card-content time {
-  font-size: 0.875rem;
-  color: var(--color-text-muted);
-}
-
-.post-card-content h2 {
-  margin: 0.5rem 0 0.75rem;
-  font-size: 1.5rem;
-}
-
-.post-card-content h2 a {
-  color: var(--color-text);
-  text-decoration: none;
-}
-
-.post-card-content h2 a:hover {
-  color: var(--color-accent);
-}
-
-.post-card-content p {
-  margin: 0 0 0.5rem;
-  color: var(--color-text-muted);
-}
-
-.read-more {
-  color: var(--color-accent);
-  text-decoration: none;
-  font-weight: 500;
-}
-
-.read-more:hover {
-  text-decoration: underline;
-}
-
-/* Post content (article body) */
-.prose {
-  max-width: 65ch;
-}
-
-.prose h1 {
-  font-size: 2rem;
-  margin-bottom: 0.5rem;
-}
-
-.prose :global(h2) {
-  font-size: 1.5rem;
-  margin-top: 2rem;
-  margin-bottom: 0.75rem;
-}
-
-.prose :global(h3) {
-  font-size: 1.25rem;
-  margin-top: 1.5rem;
-}
-
-.prose :global(p) {
-  margin-bottom: 1rem;
-}
-
-.prose :global(a) {
-  color: var(--color-accent);
-  text-decoration: underline;
-}
-
-.prose :global(a:hover) {
-  color: var(--color-accent-hover);
-}
-
-.prose :global(img) {
-  max-width: 100%;
-  height: auto;
-  border-radius: 8px;
-}
-
-.prose :global(ul), .prose :global(ol) {
-  margin: 1rem 0;
-  padding-left: 1.5rem;
+.font-display {
+  font-family: var(--font-display);
 }

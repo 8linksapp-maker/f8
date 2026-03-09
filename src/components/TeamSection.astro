@@ -1,0 +1,23 @@
+---
+/**
+ * Team - Meet our team behind the creative work
+ */
+---
+
+<section class="py-24 px-6 border-t border-dark-700">
+  <div class="max-w-7xl mx-auto">
+    <h2 class="font-display text-4xl md:text-5xl text-white mb-4">Meet our team behind the creative work.</h2>
+    <p class="text-white/60 max-w-xl text-lg mb-16">We thrive to create design that make impact not just impressions.</p>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+      {['1472099645785-5658abf4ff4e', '1507003211169-0a1dd7228f2d', '1494790108377-be9c29b29330', '1500648767791-00dcc994a43e'].map((id, i) => (
+        <div class="group">
+          <div class="aspect-square rounded-2xl overflow-hidden mb-4 bg-dark-800">
+            <img src={`https://images.unsplash.com/photo-${id}?w=400`} alt="" class="w-full h-full object-cover group-hover:scale-105 transition-transform" />
+          </div>
+          <p class="text-white font-medium">Team Member {i + 1}</p>
+          <p class="text-white/50 text-sm">Role</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

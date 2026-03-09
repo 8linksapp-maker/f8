@@ -24,5 +24,3 @@ Thumbs.db
 *.log
 npm-debug.log*
 
-# Screenshots de referência (cada projeto captura o template dele)
-public/reference/*.png

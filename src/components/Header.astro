@@ -1,18 +1,39 @@
 ---
 /**
- * Header.astro
- * Cabeçalho do site com logo e navegação
- * Edite os links conforme as páginas do seu site
+ * Header - navegação estilo Mivon Creative Agency
+ * Logo, nav central, ícone dark/light
  */
-import { SITE_CONFIG } from '../config';
+import { siteConfig } from '../config';
+
+const currentPath = Astro.url.pathname;
+const isActive = (href: string) => {
+  if (href === '/') return currentPath === '/' || currentPath === '';
+  return currentPath.startsWith(href);
+};
 ---
 
-<header class="header">
-  <a href="/" class="logo">{SITE_CONFIG.name}</a>
-  <nav class="nav">
-    <a href="/">Início</a>
-    <a href="/blog/">Blog</a>
-    <a href="/sobre/">Sobre</a>
-    <a href="/contato/">Contato</a>
-  </nav>
+<header class="fixed top-0 left-0 right-0 z-50 py-6">
+  <div class="max-w-7xl mx-auto px-6 flex items-center justify-between">
+    <a href="/" class="font-display text-2xl font-semibold text-white tracking-tight">mivon</a>
+
+    <nav class="hidden md:flex items-center gap-8">
+      {siteConfig.nav.map((item) => (
+        <a
+          href={item.href}
+          class:list={[
+            'text-sm uppercase tracking-widest text-white/90 hover:text-white transition-colors',
+            isActive(item.href) && 'text-white font-medium',
+          ]}
+        >
+          {item.label}
+        </a>
+      ))}
+    </nav>
+
+    <button type="button" class="w-10 h-10 rounded-full border border-white/30 flex items-center justify-center text-white/70 hover:border-white/50 transition-colors" aria-label="Toggle theme">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+      </svg>
+    </button>
+  </div>
 </header>

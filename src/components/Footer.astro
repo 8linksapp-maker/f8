@@ -1,20 +1,18 @@
 ---
 /**
- * Footer.astro
- * Rodapé do site com links e informações
+ * Footer - rodapé estilo Mivon
  */
-import { SITE_CONFIG } from '../config';
+import { siteConfig } from '../config';
 const currentYear = new Date().getFullYear();
 ---
 
-<footer class="footer">
-  <div class="footer-content">
-    <p>&copy; {currentYear} {SITE_CONFIG.name}. Todos os direitos reservados.</p>
-    <nav class="footer-nav">
-      <a href="/">Início</a>
-      <a href="/blog/">Blog</a>
-      <a href="/sobre/">Sobre</a>
-      <a href="/contato/">Contato</a>
+<footer class="py-12 px-6 border-t border-dark-700">
+  <div class="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+    <p class="text-white/50 text-sm">© {currentYear} {siteConfig.name}. All rights reserved.</p>
+    <nav class="flex gap-6">
+      {siteConfig.nav.map((item) => (
+        <a href={item.href} class="text-white/50 hover:text-white text-sm transition-colors">{item.label}</a>
+      ))}
     </nav>
   </div>
 </footer>

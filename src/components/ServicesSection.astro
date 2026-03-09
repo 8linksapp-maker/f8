@@ -1,0 +1,20 @@
+---
+/**
+ * Services - Product design, Web design, SEO & Marketing, Branding
+ */
+import { siteConfig } from '../config';
+---
+
+<section class="py-24 px-6 border-t border-dark-700">
+  <div class="max-w-7xl mx-auto">
+    <h2 class="font-display text-3xl md:text-4xl text-white mb-12">Our Capabilities</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+      {siteConfig.services.map((s) => (
+        <div class="group">
+          <h3 class="font-display text-xl text-white mb-3 group-hover:text-accent transition-colors">{s.title}</h3>
+          <p class="text-white/60 text-sm">{s.description}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

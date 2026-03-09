@@ -1,0 +1,33 @@
+---
+/**
+ * Works - página de portfólio
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { siteConfig } from '../config';
+
+const images = [
+  'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=800',
+  'https://images.unsplash.com/photo-1558655146-9f40138edfeb?w=800',
+  'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=800',
+  'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800',
+  'https://images.unsplash.com/photo-1551434678-e076c223a692?w=800',
+  'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800',
+];
+---
+
+<BaseLayout title="Works" description="Portfolio - nossos projetos">
+  <section class="pt-32 pb-24 px-6">
+    <h1 class="font-display text-5xl md:text-6xl text-white mb-16">Works</h1>
+    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {siteConfig.portfolio.concat(siteConfig.portfolio).map((item, i) => (
+        <a href="#" class="group block">
+          <div class="aspect-[4/3] rounded-2xl overflow-hidden mb-4 bg-dark-800">
+            <img src={images[i % images.length]} alt={item.title} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+          </div>
+          <h3 class="font-display text-xl text-white group-hover:text-accent transition-colors">{item.title}</h3>
+          <p class="text-white/50 text-sm mt-1">{item.tags.join(', ')}</p>
+        </a>
+      ))}
+    </div>
+  </section>
+</BaseLayout>

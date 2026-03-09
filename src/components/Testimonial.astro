@@ -1,0 +1,36 @@
+---
+/**
+ * Testimonial - seção de depoimentos com avatar e citação
+ */
+const testimonials = [
+  { name: 'Jessica D Miller', location: 'New York City', quote: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In gravida eu arcu a pharetra. Cras varius semper pharetra.', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=face' },
+];
+---
+
+<section class="py-20 relative">
+  <div class="absolute inset-0 bg-dark-900">
+    <img src="https://images.unsplash.com/photo-1533089860892-a7c6f0a88666?w=1920" alt="" class="w-full h-full object-cover opacity-20" />
+  </div>
+  <div class="relative z-10 max-w-3xl mx-auto px-6 text-center">
+    <div class="flex justify-center gap-4 mb-6">
+      <div class="w-14 h-14 rounded-full overflow-hidden border-2 border-white/30 opacity-70">
+        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100" alt="" class="w-full h-full object-cover" />
+      </div>
+      <div class="w-16 h-16 rounded-full overflow-hidden border-2 border-accent">
+        <img src={testimonials[0].avatar} alt="" class="w-full h-full object-cover" />
+      </div>
+      <div class="w-14 h-14 rounded-full overflow-hidden border-2 border-white/30 opacity-70">
+        <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100" alt="" class="w-full h-full object-cover" />
+      </div>
+    </div>
+    <p class="text-accent font-semibold mb-2">{testimonials[0].name}</p>
+    <p class="text-white/60 text-sm mb-6">{testimonials[0].location}</p>
+    <blockquote class="text-white/90 text-lg italic">"{testimonials[0].quote}"</blockquote>
+    <div class="flex justify-center gap-2 mt-6">
+      <span class="w-2 h-2 rounded-full bg-accent"></span>
+      <span class="w-2 h-2 rounded-full bg-white/30"></span>
+      <span class="w-2 h-2 rounded-full bg-white/30"></span>
+      <span class="w-2 h-2 rounded-full bg-white/30"></span>
+    </div>
+  </div>
+</section>
