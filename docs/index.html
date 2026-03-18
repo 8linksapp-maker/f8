@@ -261,13 +261,21 @@
     }
     .tip .icon { flex-shrink: 0; font-size: 15px; }
 
-    /* Variant content */
+    /* Variant content — blocos */
     [data-os], [data-editor] { display: none; }
     [data-os].visible, [data-editor].visible { display: block; }
 
-    /* For inline spans */
+    /* Variant content — itens de lista */
+    .substeps li[data-os], .substeps li[data-editor] { display: none !important; }
+    .substeps li[data-os].visible, .substeps li[data-editor].visible { display: flex !important; }
+
+    /* Variant content — spans inline */
     span[data-os], span[data-editor] { display: none; }
     span[data-os].visible, span[data-editor].visible { display: inline; }
+
+    /* Variant content — itens de flow */
+    .flow-item[data-os], .flow-item[data-editor] { display: none !important; }
+    .flow-item[data-os].visible, .flow-item[data-editor].visible { display: flex !important; }
 
     /* Badge indicator */
     .config-badge {
@@ -630,43 +638,85 @@
         O Cursor é o editor com inteligência artificial que vai construir as páginas do site automaticamente.
         Você não precisa escrever nenhum código — o Cursor faz tudo.
       </p>
-      <ul class="substeps">
-        <li>
-          <span class="dot">a</span>
-          <span>Acesse <strong>cursor.com</strong> e clique em <strong>"Download"</strong></span>
-        </li>
-        <li data-os="windows">
-          <span class="dot">b</span>
-          <span>Execute o arquivo <code>.exe</code> baixado e siga a instalação normalmente</span>
-        </li>
-        <li data-os="mac">
-          <span class="dot">b</span>
-          <span>Abra o arquivo <code>.dmg</code> baixado e arraste o Cursor para a pasta <strong>Aplicativos</strong></span>
-        </li>
-        <li>
-          <span class="dot">c</span>
-          <span>Crie uma conta gratuita no Cursor quando ele pedir</span>
-        </li>
-        <li>
-          <span class="dot">d</span>
-          <span>Abra a pasta <code>f8</code> no Cursor: <strong>File → Open Folder</strong>, navegue até onde você salvou a pasta e selecione ela</span>
-        </li>
-        <li data-os="windows">
-          <span class="dot">e</span>
-          <span>Abra o terminal: pressione <code>Ctrl+`</code> (acento grave) ou vá em <strong>View → Terminal</strong></span>
-        </li>
-        <li data-os="mac">
-          <span class="dot">e</span>
-          <span>Abra o terminal: pressione <code>⌘+`</code> (acento grave) ou vá em <strong>View → Terminal</strong></span>
-        </li>
-        <li>
-          <span class="dot">f</span>
-          <span>No terminal, rode <code>bun run dev</code> — isso inicia o f8 Studio</span>
-        </li>
-      </ul>
-      <a href="https://cursor.com/download" target="_blank" class="btn">Baixar o Cursor →</a>
+
+      <!-- CURSOR + WINDOWS -->
+      <div data-os="windows">
+        <ul class="substeps">
+          <li>
+            <span class="dot">a</span>
+            <span>Abra o navegador e acesse <a href="https://cursor.com/download" target="_blank"><strong>cursor.com/download ↗</strong></a></span>
+          </li>
+          <li>
+            <span class="dot">b</span>
+            <span>Clique em <strong>"Download for Windows"</strong> — um arquivo <code>.exe</code> vai ser baixado</span>
+          </li>
+          <li>
+            <span class="dot">c</span>
+            <span>Abra a pasta <strong>Downloads</strong>, dê dois cliques no arquivo <code>Cursor Setup...exe</code> e aguarde instalar</span>
+          </li>
+          <li>
+            <span class="dot">d</span>
+            <span>O Cursor vai abrir sozinho ao terminar. Se pedir para criar conta, crie uma conta gratuita</span>
+          </li>
+          <li>
+            <span class="dot">e</span>
+            <span>Clique em <strong>File → Open Folder</strong>, encontre a pasta <code>f8</code> que você baixou na Área de Trabalho e clique em <strong>"Selecionar pasta"</strong></span>
+          </li>
+          <li>
+            <span class="dot">f</span>
+            <span>Para abrir o terminal dentro do Cursor, pressione <code>Ctrl</code> + <code>`</code> (a tecla do acento grave, ao lado do número 1) — uma janela preta vai aparecer na parte de baixo</span>
+          </li>
+          <li>
+            <span class="dot">g</span>
+            <span>No terminal, digite <code>bun run dev</code> e pressione <strong>Enter</strong> — isso inicia o f8 Studio</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- CURSOR + MAC -->
+      <div data-os="mac">
+        <ul class="substeps">
+          <li>
+            <span class="dot">a</span>
+            <span>Abra o navegador e acesse <a href="https://cursor.com/download" target="_blank"><strong>cursor.com/download ↗</strong></a></span>
+          </li>
+          <li>
+            <span class="dot">b</span>
+            <span>Clique em <strong>"Download for Mac"</strong> — um arquivo <code>.dmg</code> vai ser baixado</span>
+          </li>
+          <li>
+            <span class="dot">c</span>
+            <span>Abra a pasta <strong>Downloads</strong> no Finder e dê dois cliques no arquivo <code>Cursor...dmg</code></span>
+          </li>
+          <li>
+            <span class="dot">d</span>
+            <span>Uma janela vai abrir mostrando o ícone do Cursor e a pasta Aplicativos — arraste o ícone do Cursor para a pasta Aplicativos</span>
+          </li>
+          <li>
+            <span class="dot">e</span>
+            <span>Abra o Cursor pela pasta Aplicativos. Se aparecer aviso de segurança, clique em <strong>"Abrir mesmo assim"</strong></span>
+          </li>
+          <li>
+            <span class="dot">f</span>
+            <span>Se pedir para criar conta, crie uma conta gratuita</span>
+          </li>
+          <li>
+            <span class="dot">g</span>
+            <span>Clique em <strong>File → Open Folder</strong>, encontre a pasta <code>f8</code> que você baixou na Área de Trabalho e clique em <strong>"Open"</strong></span>
+          </li>
+          <li>
+            <span class="dot">h</span>
+            <span>Para abrir o terminal dentro do Cursor, pressione <code>⌘</code> + <code>`</code> (a tecla do acento grave, ao lado do número 1) — uma janela preta vai aparecer na parte de baixo</span>
+          </li>
+          <li>
+            <span class="dot">i</span>
+            <span>No terminal, digite <code>bun run dev</code> e pressione <strong>Enter</strong> — isso inicia o f8 Studio</span>
+          </li>
+        </ul>
+      </div>
+
     </div>
-    <div class="card-footer">✓ Já tem o Cursor instalado? Pule para o próximo passo.</div>
+    <div class="card-footer">✓ Pronto quando o terminal mostrar que o f8 está rodando e você conseguir abrir <code>localhost:4321</code> no navegador.</div>
   </div>
 
   <!-- Step 5: Editor — ANTIGRAVITY -->
@@ -680,42 +730,85 @@
         O Antigravity é o editor com inteligência artificial que vai construir as páginas do site automaticamente.
         Você não precisa escrever nenhum código — o Antigravity faz tudo.
       </p>
-      <ul class="substeps">
-        <li>
-          <span class="dot">a</span>
-          <span>Acesse o site do Antigravity e faça o download para o seu sistema</span>
-        </li>
-        <li data-os="windows">
-          <span class="dot">b</span>
-          <span>Execute o instalador <code>.exe</code> e siga os passos na tela</span>
-        </li>
-        <li data-os="mac">
-          <span class="dot">b</span>
-          <span>Abra o arquivo <code>.dmg</code> e arraste o Antigravity para a pasta <strong>Aplicativos</strong></span>
-        </li>
-        <li>
-          <span class="dot">c</span>
-          <span>Faça login ou crie sua conta quando o editor abrir</span>
-        </li>
-        <li>
-          <span class="dot">d</span>
-          <span>Abra a pasta <code>f8</code> no Antigravity: <strong>File → Open Folder</strong>, navegue até onde você salvou a pasta e selecione ela</span>
-        </li>
-        <li data-os="windows">
-          <span class="dot">e</span>
-          <span>Abra o terminal integrado: pressione <code>Ctrl+`</code> ou vá em <strong>View → Terminal</strong></span>
-        </li>
-        <li data-os="mac">
-          <span class="dot">e</span>
-          <span>Abra o terminal integrado: pressione <code>⌘+`</code> ou vá em <strong>View → Terminal</strong></span>
-        </li>
-        <li>
-          <span class="dot">f</span>
-          <span>No terminal, rode <code>bun run dev</code> — isso inicia o f8 Studio</span>
-        </li>
-      </ul>
+
+      <!-- ANTIGRAVITY + WINDOWS -->
+      <div data-os="windows">
+        <ul class="substeps">
+          <li>
+            <span class="dot">a</span>
+            <span>Abra o navegador e acesse o site do Antigravity para fazer o download</span>
+          </li>
+          <li>
+            <span class="dot">b</span>
+            <span>Clique na opção de download para <strong>Windows</strong> — um arquivo <code>.exe</code> vai ser baixado</span>
+          </li>
+          <li>
+            <span class="dot">c</span>
+            <span>Abra a pasta <strong>Downloads</strong>, dê dois cliques no instalador e aguarde terminar</span>
+          </li>
+          <li>
+            <span class="dot">d</span>
+            <span>O Antigravity vai abrir. Faça login ou crie uma conta quando pedir</span>
+          </li>
+          <li>
+            <span class="dot">e</span>
+            <span>Clique em <strong>File → Open Folder</strong>, encontre a pasta <code>f8</code> que você baixou na Área de Trabalho e clique em <strong>"Selecionar pasta"</strong></span>
+          </li>
+          <li>
+            <span class="dot">f</span>
+            <span>Para abrir o terminal dentro do Antigravity, pressione <code>Ctrl</code> + <code>`</code> (a tecla do acento grave, ao lado do número 1) — uma janela preta vai aparecer na parte de baixo</span>
+          </li>
+          <li>
+            <span class="dot">g</span>
+            <span>No terminal, digite <code>bun run dev</code> e pressione <strong>Enter</strong> — isso inicia o f8 Studio</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- ANTIGRAVITY + MAC -->
+      <div data-os="mac">
+        <ul class="substeps">
+          <li>
+            <span class="dot">a</span>
+            <span>Abra o navegador e acesse o site do Antigravity para fazer o download</span>
+          </li>
+          <li>
+            <span class="dot">b</span>
+            <span>Clique na opção de download para <strong>Mac</strong> — um arquivo <code>.dmg</code> vai ser baixado</span>
+          </li>
+          <li>
+            <span class="dot">c</span>
+            <span>Abra a pasta <strong>Downloads</strong> no Finder e dê dois cliques no arquivo <code>.dmg</code></span>
+          </li>
+          <li>
+            <span class="dot">d</span>
+            <span>Arraste o ícone do Antigravity para a pasta <strong>Aplicativos</strong> na janela que abrir</span>
+          </li>
+          <li>
+            <span class="dot">e</span>
+            <span>Abra o Antigravity pela pasta Aplicativos. Se aparecer aviso de segurança, clique em <strong>"Abrir mesmo assim"</strong></span>
+          </li>
+          <li>
+            <span class="dot">f</span>
+            <span>Faça login ou crie uma conta quando pedir</span>
+          </li>
+          <li>
+            <span class="dot">g</span>
+            <span>Clique em <strong>File → Open Folder</strong>, encontre a pasta <code>f8</code> que você baixou na Área de Trabalho e clique em <strong>"Open"</strong></span>
+          </li>
+          <li>
+            <span class="dot">h</span>
+            <span>Para abrir o terminal dentro do Antigravity, pressione <code>⌘</code> + <code>`</code> (a tecla do acento grave, ao lado do número 1) — uma janela preta vai aparecer na parte de baixo</span>
+          </li>
+          <li>
+            <span class="dot">i</span>
+            <span>No terminal, digite <code>bun run dev</code> e pressione <strong>Enter</strong> — isso inicia o f8 Studio</span>
+          </li>
+        </ul>
+      </div>
+
     </div>
-    <div class="card-footer">✓ Já tem o Antigravity instalado? Pule para o próximo passo.</div>
+    <div class="card-footer">✓ Pronto quando o terminal mostrar que o f8 está rodando e você conseguir abrir <code>localhost:4321</code> no navegador.</div>
   </div>
 
   <!-- Step 6: Token -->
