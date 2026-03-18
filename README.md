@@ -5,7 +5,7 @@ Feito para ser usado junto com o **Cursor** (editor com IA).
 
 ---
 
-## 👉 [Clique aqui para ver o guia de configuração](https://htmlpreview.github.io/?https://github.com/medeirosjj123/f8/blob/main/docs/index.html)
+## 👉 [Clique aqui para ver o guia de configuração](https://htmlpreview.github.io/?https://github.com/8linksapp-maker/f8/blob/main/docs/index.html)
 
 > Como criar contas no GitHub e Vercel, baixar o Cursor, configurar o token e criar seu primeiro site.
 
