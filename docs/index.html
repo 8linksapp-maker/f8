@@ -401,11 +401,84 @@
     <div class="card-footer">✓ Já tem conta? Pule para o próximo passo.</div>
   </div>
 
-  <!-- Step 3: Editor — CURSOR -->
-  <div class="card" data-editor="cursor">
+  <!-- Step 3: Bun -->
+  <div class="card">
     <div class="card-body">
       <div class="step-header">
         <div class="step-num">3</div>
+        <h2>Instale o Bun</h2>
+      </div>
+      <p class="step-desc">
+        O Bun é o programa que roda o f8 Studio no seu computador. A instalação é feita uma única vez, direto pelo terminal.
+      </p>
+
+      <!-- Windows -->
+      <div data-os="windows">
+        <div class="tip">
+          <span class="icon">💡</span>
+          <span>No Windows, use o <strong>PowerShell</strong> — não o Prompt de Comando (CMD).</span>
+        </div>
+        <ul class="substeps">
+          <li>
+            <span class="dot">a</span>
+            <span>Pressione <code>Win + X</code> e clique em <strong>"Windows PowerShell"</strong> ou <strong>"Terminal"</strong></span>
+          </li>
+          <li>
+            <span class="dot">b</span>
+            <span>Cole o comando abaixo e pressione Enter:</span>
+          </li>
+        </ul>
+        <div style="background:#111;border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:12px 16px;margin-bottom:14px;font-family:'SF Mono',Consolas,monospace;font-size:13px;color:#a78bfa;word-break:break-all">
+          irm bun.sh/install.ps1 | iex
+        </div>
+        <ul class="substeps">
+          <li>
+            <span class="dot">c</span>
+            <span>Aguarde terminar. Quando aparecer <strong>"Bun was installed successfully"</strong>, está pronto</span>
+          </li>
+          <li>
+            <span class="dot">d</span>
+            <span><strong>Feche e reabra</strong> o PowerShell para o Bun ser reconhecido</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Mac -->
+      <div data-os="mac">
+        <div class="tip">
+          <span class="icon">💡</span>
+          <span>No Mac, use o <strong>Terminal</strong> — pressione <code>⌘ + Espaço</code>, escreva "Terminal" e abra.</span>
+        </div>
+        <ul class="substeps">
+          <li>
+            <span class="dot">a</span>
+            <span>Abra o Terminal e cole o comando abaixo:</span>
+          </li>
+        </ul>
+        <div style="background:#111;border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:12px 16px;margin-bottom:14px;font-family:'SF Mono',Consolas,monospace;font-size:13px;color:#a78bfa;word-break:break-all">
+          curl -fsSL https://bun.sh/install | bash
+        </div>
+        <ul class="substeps">
+          <li>
+            <span class="dot">b</span>
+            <span>Aguarde terminar. Quando aparecer <strong>"Bun was installed successfully"</strong>, está pronto</span>
+          </li>
+          <li>
+            <span class="dot">c</span>
+            <span><strong>Feche e reabra</strong> o Terminal para o Bun ser reconhecido</span>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+    <div class="card-footer">✓ Para confirmar: rode <code>bun --version</code> no terminal — deve aparecer um número de versão.</div>
+  </div>
+
+  <!-- Step 4: Editor — CURSOR -->
+  <div class="card" data-editor="cursor">
+    <div class="card-body">
+      <div class="step-header">
+        <div class="step-num">4</div>
         <h2>Baixe e instale o Cursor</h2>
       </div>
       <p class="step-desc">
@@ -451,11 +524,11 @@
     <div class="card-footer">✓ Já tem o Cursor instalado? Pule para o próximo passo.</div>
   </div>
 
-  <!-- Step 3: Editor — ANTIGRAVITY -->
+  <!-- Step 4: Editor — ANTIGRAVITY -->
   <div class="card" data-editor="antigravity">
     <div class="card-body">
       <div class="step-header">
-        <div class="step-num">3</div>
+        <div class="step-num">4</div>
         <h2>Baixe e instale o Antigravity</h2>
       </div>
       <p class="step-desc">
@@ -500,11 +573,11 @@
     <div class="card-footer">✓ Já tem o Antigravity instalado? Pule para o próximo passo.</div>
   </div>
 
-  <!-- Step 4: Token -->
+  <!-- Step 5: Token -->
   <div class="card">
     <div class="card-body">
       <div class="step-header">
-        <div class="step-num">4</div>
+        <div class="step-num">5</div>
         <h2>Configure o token do GitHub</h2>
       </div>
       <p class="step-desc">
