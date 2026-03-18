@@ -26,9 +26,9 @@
     /* Header */
     .header {
       text-align: center;
-      padding: 48px 0 40px;
+      padding: 48px 0 32px;
       border-bottom: 1px solid rgba(255,255,255,.08);
-      margin-bottom: 40px;
+      margin-bottom: 32px;
     }
     .logo {
       display: inline-flex;
@@ -47,6 +47,54 @@
     .logo-text span { color: #a78bfa; }
     .header h1 { font-size: 28px; font-weight: 700; margin-bottom: 10px; }
     .header p { font-size: 16px; color: rgba(255,255,255,.5); max-width: 480px; margin: 0 auto; }
+
+    /* ── Tab Selectors ── */
+    .selectors {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      background: #161616;
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 14px;
+      padding: 18px 20px;
+      margin-bottom: 32px;
+    }
+    .selector-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .selector-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: rgba(255,255,255,.35);
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      white-space: nowrap;
+      min-width: 60px;
+    }
+    .tab-group {
+      display: flex;
+      gap: 6px;
+    }
+    .tab-btn {
+      padding: 7px 16px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,.1);
+      background: transparent;
+      color: rgba(255,255,255,.5);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .15s;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .tab-btn:hover { border-color: rgba(255,255,255,.25); color: rgba(255,255,255,.8); }
+    .tab-btn.active {
+      background: #6b39f4;
+      border-color: #6b39f4;
+      color: #fff;
+    }
 
     /* Section header */
     .section-label {
@@ -177,12 +225,11 @@
     summary::after { content: '▼'; font-size: 10px; color: rgba(255,255,255,.35); transition: transform .2s; }
     details[open] summary::after { transform: rotate(180deg); }
     .faq-body {
-      padding: 0 18px 14px;
+      padding: 12px 18px 14px;
       font-size: 14px;
       color: rgba(255,255,255,.55);
       line-height: 1.6;
       border-top: 1px solid rgba(255,255,255,.06);
-      padding-top: 12px;
     }
 
     /* Success box */
@@ -214,9 +261,32 @@
     }
     .tip .icon { flex-shrink: 0; font-size: 15px; }
 
+    /* Variant content */
+    [data-os], [data-editor] { display: none; }
+    [data-os].visible, [data-editor].visible { display: block; }
+
+    /* For inline spans */
+    span[data-os], span[data-editor] { display: none; }
+    span[data-os].visible, span[data-editor].visible { display: inline; }
+
+    /* Badge indicator */
+    .config-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(107,57,244,.15);
+      border: 1px solid rgba(107,57,244,.3);
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 12px;
+      color: #c4b5fd;
+      font-weight: 600;
+    }
+
     @media (max-width: 480px) {
       .header h1 { font-size: 22px; }
       .header p { font-size: 14px; }
+      .selector-row { flex-wrap: wrap; }
     }
   </style>
 </head>
@@ -239,6 +309,32 @@
     </div>
     <h1>Como usar o f8 Studio</h1>
     <p>Guia passo a passo para criar e publicar sites sem precisar saber programar.</p>
+  </div>
+
+  <!-- ── SELETORES ── -->
+  <div class="selectors">
+    <div class="selector-row">
+      <span class="selector-label">Sistema</span>
+      <div class="tab-group" id="os-tabs">
+        <button class="tab-btn active" data-select-os="windows">
+          🪟 Windows
+        </button>
+        <button class="tab-btn" data-select-os="mac">
+          🍎 Mac
+        </button>
+      </div>
+    </div>
+    <div class="selector-row">
+      <span class="selector-label">Editor</span>
+      <div class="tab-group" id="editor-tabs">
+        <button class="tab-btn active" data-select-editor="cursor">
+          ✦ Cursor
+        </button>
+        <button class="tab-btn" data-select-editor="antigravity">
+          ⚡ Antigravity
+        </button>
+      </div>
+    </div>
   </div>
 
 
@@ -305,8 +401,8 @@
     <div class="card-footer">✓ Já tem conta? Pule para o próximo passo.</div>
   </div>
 
-  <!-- Step 3: Cursor -->
-  <div class="card">
+  <!-- Step 3: Editor — CURSOR -->
+  <div class="card" data-editor="cursor">
     <div class="card-body">
       <div class="step-header">
         <div class="step-num">3</div>
@@ -321,9 +417,13 @@
           <span class="dot">a</span>
           <span>Acesse <strong>cursor.com</strong> e clique em <strong>"Download"</strong></span>
         </li>
-        <li>
+        <li data-os="windows">
           <span class="dot">b</span>
-          <span>Instale normalmente — Windows: execute o <code>.exe</code> / Mac: arraste para Aplicativos</span>
+          <span>Execute o arquivo <code>.exe</code> baixado e siga a instalação normalmente</span>
+        </li>
+        <li data-os="mac">
+          <span class="dot">b</span>
+          <span>Abra o arquivo <code>.dmg</code> baixado e arraste o Cursor para a pasta <strong>Aplicativos</strong></span>
         </li>
         <li>
           <span class="dot">c</span>
@@ -333,14 +433,71 @@
           <span class="dot">d</span>
           <span>Abra a pasta <code>f8</code> no Cursor: <strong>File → Open Folder</strong></span>
         </li>
-        <li>
+        <li data-os="windows">
           <span class="dot">e</span>
-          <span>No terminal do Cursor, rode <code>bun run dev</code> — isso inicia o f8 Studio</span>
+          <span>Abra o terminal: pressione <code>Ctrl+`</code> (acento grave) ou vá em <strong>View → Terminal</strong></span>
+        </li>
+        <li data-os="mac">
+          <span class="dot">e</span>
+          <span>Abra o terminal: pressione <code>⌘+`</code> (acento grave) ou vá em <strong>View → Terminal</strong></span>
+        </li>
+        <li>
+          <span class="dot">f</span>
+          <span>No terminal, rode <code>bun run dev</code> — isso inicia o f8 Studio</span>
         </li>
       </ul>
       <a href="https://cursor.com/download" target="_blank" class="btn">Baixar o Cursor →</a>
     </div>
-    <div class="card-footer">✓ Já tem o Cursor? Pule para o próximo passo.</div>
+    <div class="card-footer">✓ Já tem o Cursor instalado? Pule para o próximo passo.</div>
+  </div>
+
+  <!-- Step 3: Editor — ANTIGRAVITY -->
+  <div class="card" data-editor="antigravity">
+    <div class="card-body">
+      <div class="step-header">
+        <div class="step-num">3</div>
+        <h2>Baixe e instale o Antigravity</h2>
+      </div>
+      <p class="step-desc">
+        O Antigravity é o editor com inteligência artificial que vai construir as páginas do site automaticamente.
+        Você não precisa escrever nenhum código — o Antigravity faz tudo.
+      </p>
+      <ul class="substeps">
+        <li>
+          <span class="dot">a</span>
+          <span>Acesse o site do Antigravity e faça o download para o seu sistema</span>
+        </li>
+        <li data-os="windows">
+          <span class="dot">b</span>
+          <span>Execute o instalador <code>.exe</code> e siga os passos na tela</span>
+        </li>
+        <li data-os="mac">
+          <span class="dot">b</span>
+          <span>Abra o arquivo <code>.dmg</code> e arraste o Antigravity para a pasta <strong>Aplicativos</strong></span>
+        </li>
+        <li>
+          <span class="dot">c</span>
+          <span>Faça login ou crie sua conta quando o editor abrir</span>
+        </li>
+        <li>
+          <span class="dot">d</span>
+          <span>Abra a pasta <code>f8</code> no Antigravity: <strong>File → Open Folder</strong></span>
+        </li>
+        <li data-os="windows">
+          <span class="dot">e</span>
+          <span>Abra o terminal integrado: pressione <code>Ctrl+`</code> ou vá em <strong>View → Terminal</strong></span>
+        </li>
+        <li data-os="mac">
+          <span class="dot">e</span>
+          <span>Abra o terminal integrado: pressione <code>⌘+`</code> ou vá em <strong>View → Terminal</strong></span>
+        </li>
+        <li>
+          <span class="dot">f</span>
+          <span>No terminal, rode <code>bun run dev</code> — isso inicia o f8 Studio</span>
+        </li>
+      </ul>
+    </div>
+    <div class="card-footer">✓ Já tem o Antigravity instalado? Pule para o próximo passo.</div>
   </div>
 
   <!-- Step 4: Token -->
@@ -415,7 +572,10 @@
           <div class="flow-num">1</div>
           <div>
             <div class="flow-title">Abra o f8 Studio</div>
-            <div class="flow-desc">No Cursor, rode <code>bun run dev</code> no terminal e acesse <code>localhost:4321</code> no navegador.</div>
+            <div class="flow-desc">
+              No <span data-editor="cursor">Cursor</span><span data-editor="antigravity">Antigravity</span>,
+              rode <code>bun run dev</code> no terminal e acesse <code>localhost:4321</code> no navegador.
+            </div>
           </div>
         </div>
         <div class="flow-item">
@@ -446,13 +606,35 @@
             <div class="flow-desc">Clique em "Salvar prompts" e depois em "Copiar comando".</div>
           </div>
         </div>
-        <div class="flow-item">
+
+        <!-- Passo 6 — Cursor -->
+        <div class="flow-item" data-editor="cursor">
           <div class="flow-num">6</div>
           <div>
             <div class="flow-title">Cole no Cursor e aguarde</div>
-            <div class="flow-desc">No Cursor, pressione <code>Ctrl+L</code> (Windows) ou <code>⌘L</code> (Mac). Selecione o modo <strong>Agent</strong>, cole o comando e pressione Enter. Aguarde sem mexer em nada — pode levar alguns minutos.</div>
+            <div class="flow-desc">
+              No Cursor, pressione
+              <span data-os="windows"><code>Ctrl+L</code></span><span data-os="mac"><code>⌘L</code></span>
+              para abrir o chat. Selecione o modo <strong>Agent</strong>, cole o comando e pressione Enter.
+              Aguarde sem mexer em nada — pode levar alguns minutos.
+            </div>
           </div>
         </div>
+
+        <!-- Passo 6 — Antigravity -->
+        <div class="flow-item" data-editor="antigravity">
+          <div class="flow-num">6</div>
+          <div>
+            <div class="flow-title">Cole no Antigravity e aguarde</div>
+            <div class="flow-desc">
+              No Antigravity, abra o chat de IA
+              (<span data-os="windows"><code>Ctrl+L</code></span><span data-os="mac"><code>⌘L</code></span>).
+              Selecione o modo <strong>Agent</strong>, cole o comando e pressione Enter.
+              Aguarde sem mexer em nada — pode levar alguns minutos.
+            </div>
+          </div>
+        </div>
+
         <div class="flow-item">
           <div class="flow-num">7</div>
           <div>
@@ -472,12 +654,12 @@
 
   <details>
     <summary>Preciso saber programar?</summary>
-    <div class="faq-body">Não. O Cursor e o f8 fazem todo o trabalho técnico. Você só precisa seguir os passos deste guia.</div>
+    <div class="faq-body">Não. O editor de IA e o f8 fazem todo o trabalho técnico. Você só precisa seguir os passos deste guia.</div>
   </details>
 
   <details>
     <summary>Quanto custa?</summary>
-    <div class="faq-body">GitHub, Vercel e a conta básica do Cursor são gratuitos. O Cursor tem um limite de uso no plano gratuito — para uso intenso, o plano pago custa cerca de R$100/mês.</div>
+    <div class="faq-body">GitHub, Vercel e a conta básica do Cursor/Antigravity são gratuitos. Para uso intenso, planos pagos ficam em torno de R$100/mês.</div>
   </details>
 
   <details>
@@ -496,13 +678,17 @@
   </details>
 
   <details>
-    <summary>E se o Cursor travar ou der erro?</summary>
-    <div class="faq-body">Feche o chat, reabra com Ctrl+L (ou ⌘L) e cole o mesmo comando novamente. O Cursor consegue continuar de onde parou.</div>
+    <summary>E se o editor de IA travar ou der erro?</summary>
+    <div class="faq-body">
+      Feche o chat, reabra com
+      <span data-os="windows"><code>Ctrl+L</code></span><span data-os="mac"><code>⌘L</code></span>
+      e cole o mesmo comando novamente. O editor consegue continuar de onde parou na maioria dos casos.
+    </div>
   </details>
 
   <details>
     <summary>E se o f8 Studio não abrir?</summary>
-    <div class="faq-body">Abra o terminal do Cursor e rode: <code>bun run kill-ports</code> e depois <code>bun run dev</code>. Se ainda não funcionar, feche e reabra o Cursor.</div>
+    <div class="faq-body">Abra o terminal do editor e rode: <code>bun run kill-ports</code> e depois <code>bun run dev</code>. Se ainda não funcionar, feche e reabra o editor.</div>
   </details>
 
   <hr class="divider" />
@@ -512,5 +698,46 @@
   </div>
 
 </div>
+
+<script>
+  // Estado atual
+  let currentOs = 'windows';
+  let currentEditor = 'cursor';
+
+  function applySelections() {
+    // OS
+    document.querySelectorAll('[data-os]').forEach(el => {
+      el.classList.toggle('visible', el.dataset.os === currentOs);
+    });
+    // Editor
+    document.querySelectorAll('[data-editor]').forEach(el => {
+      el.classList.toggle('visible', el.dataset.editor === currentEditor);
+    });
+  }
+
+  // Botões de OS
+  document.querySelectorAll('[data-select-os]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      currentOs = btn.dataset.selectOs;
+      document.querySelectorAll('[data-select-os]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      applySelections();
+    });
+  });
+
+  // Botões de editor
+  document.querySelectorAll('[data-select-editor]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      currentEditor = btn.dataset.selectEditor;
+      document.querySelectorAll('[data-select-editor]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      applySelections();
+    });
+  });
+
+  // Inicializa
+  applySelections();
+</script>
+
 </body>
 </html>
