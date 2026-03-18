@@ -482,37 +482,69 @@
         <h2>Baixe o f8 Studio para o seu computador</h2>
       </div>
       <p class="step-desc">
-        Vamos baixar os arquivos do f8 direto pelo terminal com um comando simples.
+        Vamos baixar os arquivos do f8 usando o terminal. Siga cada passo com atenção — copie os comandos exatamente como estão.
       </p>
 
-      <!-- Windows -->
+      <!-- ── WINDOWS ── -->
       <div data-os="windows">
-        <p class="step-desc" style="margin-bottom:10px">Primeiro, instale o Git — ele é necessário para baixar o f8:</p>
+
+        <p style="font-size:13px;font-weight:700;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">Parte 1 — Instalar o Git</p>
+        <p class="step-desc">O Git é um programa que permite baixar o f8. Precisa instalar uma vez só.</p>
+
         <ul class="substeps">
           <li>
-            <span class="dot">a</span>
-            <span>Acesse <a href="https://git-scm.com/download/win" target="_blank"><strong>git-scm.com/download/win ↗</strong></a> e baixe o instalador</span>
+            <span class="dot">1</span>
+            <span>Abra o seu navegador (Chrome, Edge, Firefox — qualquer um) e acesse:<br>
+              <a href="https://git-scm.com/download/win" target="_blank" style="font-weight:700">git-scm.com/download/win ↗</a>
+            </span>
           </li>
           <li>
-            <span class="dot">b</span>
-            <span>Execute o <code>.exe</code> baixado e clique em <strong>"Next"</strong> em todas as telas — as opções padrão já estão certas</span>
+            <span class="dot">2</span>
+            <span>O download do instalador vai começar automaticamente. Se não começar, clique em <strong>"Click here to download"</strong></span>
           </li>
           <li>
-            <span class="dot">c</span>
-            <span><strong>Feche e reabra o PowerShell</strong> para o Git ser reconhecido</span>
+            <span class="dot">3</span>
+            <span>Quando terminar o download, abra a pasta <strong>Downloads</strong> e dê dois cliques no arquivo <code>Git-...-64-bit.exe</code></span>
           </li>
           <li>
-            <span class="dot">d</span>
-            <span>No PowerShell, navegue até onde quer salvar o f8. Exemplo — para salvar na Área de Trabalho:</span>
+            <span class="dot">4</span>
+            <span>Uma janela de instalação vai abrir. Clique em <strong>"Next"</strong> em todas as telas sem mudar nada — as opções padrão já estão certas. No final clique em <strong>"Install"</strong> e depois em <strong>"Finish"</strong></span>
+          </li>
+        </ul>
+
+        <p style="font-size:13px;font-weight:700;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.06em;margin:18px 0 10px">Parte 2 — Abrir o PowerShell</p>
+
+        <ul class="substeps">
+          <li>
+            <span class="dot">5</span>
+            <span>Pressione a tecla <code>Win</code> (tecla do Windows no teclado) para abrir o menu Iniciar</span>
+          </li>
+          <li>
+            <span class="dot">6</span>
+            <span>Digite <strong>powershell</strong> com o teclado — vai aparecer "Windows PowerShell" nos resultados</span>
+          </li>
+          <li>
+            <span class="dot">7</span>
+            <span>Clique em <strong>"Windows PowerShell"</strong> para abrir — uma janela escura com texto branco vai aparecer</span>
+          </li>
+        </ul>
+
+        <p style="font-size:13px;font-weight:700;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.06em;margin:18px 0 10px">Parte 3 — Baixar o f8</p>
+
+        <ul class="substeps">
+          <li>
+            <span class="dot">8</span>
+            <span>Na janela do PowerShell, copie e cole o comando abaixo e pressione <strong>Enter</strong>:<br>
+            <span style="font-size:12px;color:rgba(255,255,255,.4)">(isso vai mover o terminal para a sua Área de Trabalho)</span></span>
           </li>
         </ul>
         <div style="background:#111;border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:12px 16px;margin-bottom:14px;font-family:'SF Mono',Consolas,monospace;font-size:13px;color:#a78bfa">
-          cd Desktop
+          cd "$env:USERPROFILE\Desktop"
         </div>
         <ul class="substeps">
           <li>
-            <span class="dot">e</span>
-            <span>Agora rode o comando abaixo para baixar o f8:</span>
+            <span class="dot">9</span>
+            <span>Agora cole o comando abaixo e pressione <strong>Enter</strong> — isso vai baixar todos os arquivos do f8:</span>
           </li>
         </ul>
         <div style="background:#111;border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:12px 16px;margin-bottom:14px;font-family:'SF Mono',Consolas,monospace;font-size:13px;color:#a78bfa;word-break:break-all">
@@ -520,31 +552,48 @@
         </div>
         <ul class="substeps">
           <li>
-            <span class="dot">f</span>
-            <span>Uma pasta chamada <code>f8</code> vai aparecer na Área de Trabalho — é lá que estão os arquivos</span>
+            <span class="dot">10</span>
+            <span>Aguarde terminar. Quando aparecer <strong>"done"</strong> ou o cursor piscar de novo, está pronto</span>
+          </li>
+          <li>
+            <span class="dot">11</span>
+            <span>Uma pasta chamada <code>f8</code> vai ter aparecido na sua Área de Trabalho — você pode fechar o PowerShell agora</span>
           </li>
         </ul>
       </div>
 
-      <!-- Mac -->
+      <!-- ── MAC ── -->
       <div data-os="mac">
-        <div class="tip">
-          <span class="icon">💡</span>
-          <span>Abra o <strong>Terminal</strong> — pressione <code>⌘ + Espaço</code>, escreva "Terminal" e pressione Enter.</span>
-        </div>
+
+        <p style="font-size:13px;font-weight:700;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">Parte 1 — Abrir o Terminal</p>
+
         <ul class="substeps">
           <li>
-            <span class="dot">a</span>
-            <span>No Terminal, navegue até onde quer salvar o f8. Exemplo — para salvar na Área de Trabalho:</span>
+            <span class="dot">1</span>
+            <span>Pressione as teclas <code>⌘</code> e <code>Espaço</code> ao mesmo tempo — a busca do Mac vai abrir</span>
+          </li>
+          <li>
+            <span class="dot">2</span>
+            <span>Digite <strong>terminal</strong> e pressione <strong>Enter</strong> — uma janela escura com texto vai aparecer</span>
+          </li>
+        </ul>
+
+        <p style="font-size:13px;font-weight:700;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.06em;margin:18px 0 10px">Parte 2 — Baixar o f8</p>
+
+        <ul class="substeps">
+          <li>
+            <span class="dot">3</span>
+            <span>No Terminal, copie e cole o comando abaixo e pressione <strong>Enter</strong>:<br>
+            <span style="font-size:12px;color:rgba(255,255,255,.4)">(isso vai mover o terminal para a sua Área de Trabalho)</span></span>
           </li>
         </ul>
         <div style="background:#111;border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:12px 16px;margin-bottom:14px;font-family:'SF Mono',Consolas,monospace;font-size:13px;color:#a78bfa">
-          cd Desktop
+          cd ~/Desktop
         </div>
         <ul class="substeps">
           <li>
-            <span class="dot">b</span>
-            <span>Rode o comando abaixo para baixar o f8:</span>
+            <span class="dot">4</span>
+            <span>Agora cole o comando abaixo e pressione <strong>Enter</strong> — isso vai baixar todos os arquivos do f8:</span>
           </li>
         </ul>
         <div style="background:#111;border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:12px 16px;margin-bottom:14px;font-family:'SF Mono',Consolas,monospace;font-size:13px;color:#a78bfa;word-break:break-all">
@@ -552,18 +601,22 @@
         </div>
         <ul class="substeps">
           <li>
-            <span class="dot">c</span>
-            <span>Se o Mac pedir para instalar as ferramentas de desenvolvedor, clique em <strong>"Instalar"</strong> e aguarde — é automático</span>
+            <span class="dot">5</span>
+            <span>Se aparecer uma janela pedindo para <strong>"Instalar Ferramentas de Linha de Comando"</strong>, clique em <strong>"Instalar"</strong> e aguarde terminar. Depois rode o comando <code>git clone</code> acima de novo</span>
           </li>
           <li>
-            <span class="dot">d</span>
-            <span>Uma pasta chamada <code>f8</code> vai aparecer na Área de Trabalho — é lá que estão os arquivos</span>
+            <span class="dot">6</span>
+            <span>Aguarde terminar. Quando aparecer <strong>"done"</strong> ou o cursor piscar de novo, está pronto</span>
+          </li>
+          <li>
+            <span class="dot">7</span>
+            <span>Uma pasta chamada <code>f8</code> vai ter aparecido na sua Área de Trabalho — você pode fechar o Terminal agora</span>
           </li>
         </ul>
       </div>
 
     </div>
-    <div class="card-footer">✓ Pronto quando a pasta <code>f8</code> aparecer no local escolhido.</div>
+    <div class="card-footer">✓ Pronto quando a pasta <code>f8</code> aparecer na sua Área de Trabalho.</div>
   </div>
 
   <!-- Step 5: Editor — CURSOR -->
