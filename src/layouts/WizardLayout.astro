@@ -1,8 +1,4 @@
 ---
-/**
- * WizardLayout - layout minimalista para a ferramenta Criador de Sites
- * Header compacto, sem footer, foco total no wizard
- */
 import '../styles/hub.css';
 ---
 
@@ -11,23 +7,11 @@ import '../styles/hub.css';
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Ferramenta para criar sites a partir de referências - 8links" />
-    <title>Criador de Sites | 8links</title>
+    <meta name="description" content="f8 Studio — Criador de sites 8links" />
+    <title>f8 Studio | 8links</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   </head>
   <body>
-    <header class="sticky top-0 z-50 border-b border-[var(--color-border)] bg-[var(--color-bg)]/98 backdrop-blur-sm">
-      <div class="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
-        <a href="/" class="font-display text-xl font-semibold text-white tracking-tight">
-          8links <span class="text-white/50 font-normal">|</span> <span class="text-[var(--color-accent)]">Central de Criação</span>
-        </a>
-        <button type="button" id="open-config-btn" class="text-sm text-white/60 hover:text-white transition-colors px-3 py-1.5 rounded-lg hover:bg-white/5" title="Configurações e credenciais">
-          ⚙ Configurações
-        </button>
-      </div>
-    </header>
-    <main class="min-h-[calc(100vh-65px)]">
-      <slot />
-    </main>
+    <slot />
   </body>
 </html>

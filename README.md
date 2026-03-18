@@ -28,6 +28,8 @@ bun install
 bun run dev
 ```
 
+> **Nota:** o `bun install` baixa o Chromium (~200 MB) na primeira vez — aguarde concluir.
+
 Acesse **http://localhost:4321** — o painel abre no navegador.
 
 ---
@@ -76,7 +78,7 @@ f8/
 |---------|-----------|
 | `bun run dev` | Inicia o painel + servidor de captura |
 | `bun run build` | Gera build de produção |
-| `bun run kill-ports` | Mata processos nas portas 3001 e 4321 |
+| `bun run kill-ports` | Mata processos nas portas 3001 e 4321 (macOS/Linux apenas) |
 | `bun run dev:fresh` | Mata portas e reinicia o dev |
 
 ---

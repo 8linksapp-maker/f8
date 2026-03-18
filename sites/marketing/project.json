@@ -1,9 +1,0 @@
-{
-  "name": "marketing",
-  "displayName": "marketing",
-  "slug": "marketing",
-  "createdAt": "2026-03-10T13:51:34.673Z",
-  "status": "exported",
-  "remoteUrl": "https://github.com/8linksapp-maker/marketing.git",
-  "deployUrl": "https://marketing.vercel.app"
-}

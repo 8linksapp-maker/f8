@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://8links-test2.vercel.app/sitemap-index.xml

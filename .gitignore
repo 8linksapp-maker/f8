@@ -27,8 +27,15 @@ Thumbs.db
 *.log
 npm-debug.log*
 
-# .git de cada site (cada site pode ter seu repo para deploy separado)
-sites/*/.git/
+# Sites gerados pelos alunos (ficam só no computador de cada um)
+sites/
+
+# Prompts gerados e arquivos pessoais
+prompts-gerados.md
+package-lock.json
+
+# Regras do Cursor (configuração local do editor)
+.cursor/
 
 # Export tema CNX (temp + zip gerados)
 .export-theme-temp/
@@ -37,5 +44,4 @@ tema-*.zip
 # Referências capturadas (screenshots, HTML, CSS)
 public/reference/
 **/public/reference/
-sites/*/public/reference/
 
