@@ -57,24 +57,23 @@ import WizardLayout from '../layouts/WizardLayout.astro';
     <main class="px-6 py-8 max-w-2xl">
 
       <!-- Hero -->
-      <div class="mb-10">
+      <div class="mb-8">
         <p class="text-xs font-semibold uppercase tracking-wider mb-2" style="color: var(--hub-accent)">
-          Antes de começar
+          Faça uma vez só
         </p>
-        <h2 class="text-3xl font-bold text-white mb-3">Configure tudo em 15 minutos</h2>
+        <h2 class="text-3xl font-bold text-white mb-3">Configure tudo em 30 minutos</h2>
         <p class="text-base leading-relaxed" style="color: rgba(255,255,255,.55)">
-          Você vai precisar criar contas em 3 serviços gratuitos e instalar o Cursor.
-          Faça isso uma única vez — depois é só criar sites.
+          Você vai precisar criar contas em 2 serviços gratuitos e configurar o token do GitHub.
+          Depois disso é só criar sites.
         </p>
       </div>
 
-      <!-- Progress overview -->
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-12">
+      <!-- Overview -->
+      <div class="grid grid-cols-3 gap-3 mb-10">
         {[
-          { n: '1', label: 'GitHub', icon: '🐙', sub: 'Gratuito' },
-          { n: '2', label: 'Vercel', icon: '▲', sub: 'Gratuito' },
-          { n: '3', label: 'Cursor', icon: '⌨️', sub: 'Gratuito' },
-          { n: '4', label: 'Token', icon: '🔑', sub: '5 min' },
+          { n: '1', label: 'GitHub', icon: '🐙', sub: 'Armazenar sites' },
+          { n: '2', label: 'Vercel', icon: '▲', sub: 'Publicar sites' },
+          { n: '3', label: 'Token', icon: '🔑', sub: '5 min' },
         ].map(item => (
           <div class="flex flex-col items-center gap-1.5 p-3 rounded-xl text-center"
             style="background: var(--hub-bg-elevated); border: 1px solid var(--hub-border)">
@@ -86,7 +85,7 @@ import WizardLayout from '../layouts/WizardLayout.astro';
       </div>
 
       <!-- STEP 1: GitHub -->
-      <div class="mb-10" id="github">
+      <div class="mb-8" id="github">
         <div class="flex items-center gap-3 mb-4">
           <span class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shrink-0"
             style="background: var(--hub-accent); color: white">1</span>
@@ -99,44 +98,33 @@ import WizardLayout from '../layouts/WizardLayout.astro';
               Pense nele como o "Google Drive" dos sites — gratuito e necessário para publicar na Vercel.
             </p>
             <div class="space-y-2 mb-5">
-              <div class="flex items-start gap-3">
-                <span class="w-5 h-5 rounded-full flex items-center justify-center text-xs shrink-0 mt-0.5"
-                  style="background: rgba(107,57,244,.2); color: var(--hub-accent)">a</span>
-                <p class="text-sm" style="color: rgba(255,255,255,.7)">
-                  Acesse <strong class="text-white">github.com</strong> e clique em <strong class="text-white">"Sign up"</strong>
-                </p>
-              </div>
-              <div class="flex items-start gap-3">
-                <span class="w-5 h-5 rounded-full flex items-center justify-center text-xs shrink-0 mt-0.5"
-                  style="background: rgba(107,57,244,.2); color: var(--hub-accent)">b</span>
-                <p class="text-sm" style="color: rgba(255,255,255,.7)">
-                  Crie com seu e-mail e escolha um nome de usuário (ex: <code class="px-1 rounded" style="background:rgba(255,255,255,.1)">joao-silva</code>)
-                </p>
-              </div>
-              <div class="flex items-start gap-3">
-                <span class="w-5 h-5 rounded-full flex items-center justify-center text-xs shrink-0 mt-0.5"
-                  style="background: rgba(107,57,244,.2); color: var(--hub-accent)">c</span>
-                <p class="text-sm" style="color: rgba(255,255,255,.7)">
-                  Confirme o e-mail e pronto — plano gratuito já é suficiente
-                </p>
-              </div>
+              {[
+                'Abra o navegador, acesse <strong>github.com</strong> e clique em <strong>"Sign up"</strong>',
+                'Digite seu e-mail, crie uma senha e escolha um nome de usuário (ex: <code>joao-silva</code>) — use só letras, números e hífen',
+                'Confirme seu e-mail clicando no link que o GitHub vai te enviar — sem isso a conta não ativa',
+                'Quando perguntar qual plano, escolha <strong>"Free"</strong> — gratuito já é suficiente',
+              ].map((text, i) => (
+                <div class="flex items-start gap-3">
+                  <span class="w-5 h-5 rounded-full flex items-center justify-center text-xs shrink-0 mt-0.5"
+                    style="background: rgba(107,57,244,.2); color: var(--hub-accent)">{String.fromCharCode(97+i)}</span>
+                  <p class="text-sm" style="color: rgba(255,255,255,.7)" set:html={text} />
+                </div>
+              ))}
             </div>
             <a href="https://github.com/signup" target="_blank"
-              class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold transition-colors"
+              class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold"
               style="background: var(--hub-accent); color: white">
               Criar conta no GitHub →
             </a>
           </div>
           <div class="px-5 py-3" style="background: rgba(255,255,255,.02); border-top: 1px solid var(--hub-border)">
-            <p class="text-xs" style="color: rgba(255,255,255,.3)">
-              ✓ Já tem conta? Pode pular para o próximo passo.
-            </p>
+            <p class="text-xs" style="color: rgba(255,255,255,.3)">✓ Já tem conta? Pule para o próximo passo.</p>
           </div>
         </div>
       </div>
 
       <!-- STEP 2: Vercel -->
-      <div class="mb-10" id="vercel">
+      <div class="mb-8" id="vercel">
         <div class="flex items-center gap-3 mb-4">
           <span class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shrink-0"
             style="background: var(--hub-accent); color: white">2</span>
@@ -145,229 +133,140 @@ import WizardLayout from '../layouts/WizardLayout.astro';
         <div class="rounded-xl overflow-hidden" style="background: var(--hub-bg-elevated); border: 1px solid var(--hub-border)">
           <div class="p-5">
             <p class="text-sm leading-relaxed mb-4" style="color: rgba(255,255,255,.6)">
-              A Vercel é quem coloca seu site no ar — de graça, em segundos, com deploy automático
-              toda vez que você atualizar o site. É a plataforma mais usada por desenvolvedores.
+              A Vercel é quem coloca o seu site no ar — de graça, em segundos, com link automático.
+              Cada vez que você atualizar o site, ele publica sozinho.
             </p>
             <div class="space-y-2 mb-5">
-              <div class="flex items-start gap-3">
-                <span class="w-5 h-5 rounded-full flex items-center justify-center text-xs shrink-0 mt-0.5"
-                  style="background: rgba(107,57,244,.2); color: var(--hub-accent)">a</span>
-                <p class="text-sm" style="color: rgba(255,255,255,.7)">
-                  Acesse <strong class="text-white">vercel.com</strong> e clique em <strong class="text-white">"Sign Up"</strong>
-                </p>
-              </div>
-              <div class="flex items-start gap-3">
-                <span class="w-5 h-5 rounded-full flex items-center justify-center text-xs shrink-0 mt-0.5"
-                  style="background: rgba(107,57,244,.2); color: var(--hub-accent)">b</span>
-                <p class="text-sm" style="color: rgba(255,255,255,.7)">
-                  Clique em <strong class="text-white">"Continue with GitHub"</strong> — use a mesma conta do passo anterior
-                </p>
-              </div>
-              <div class="flex items-start gap-3">
-                <span class="w-5 h-5 rounded-full flex items-center justify-center text-xs shrink-0 mt-0.5"
-                  style="background: rgba(107,57,244,.2); color: var(--hub-accent)">c</span>
-                <p class="text-sm" style="color: rgba(255,255,255,.7)">
-                  Autorize o acesso e escolha o plano <strong class="text-white">Hobby</strong> (gratuito)
-                </p>
-              </div>
+              {[
+                'Acesse <strong>vercel.com</strong> e clique em <strong>"Sign Up"</strong>',
+                'Clique em <strong>"Continue with GitHub"</strong> — use a mesma conta do passo anterior',
+                'O GitHub vai pedir para autorizar a Vercel — clique em <strong>"Authorize Vercel"</strong>',
+                'Quando perguntar sobre o plano, escolha <strong>Hobby</strong> (gratuito) e conclua o cadastro',
+              ].map((text, i) => (
+                <div class="flex items-start gap-3">
+                  <span class="w-5 h-5 rounded-full flex items-center justify-center text-xs shrink-0 mt-0.5"
+                    style="background: rgba(107,57,244,.2); color: var(--hub-accent)">{String.fromCharCode(97+i)}</span>
+                  <p class="text-sm" style="color: rgba(255,255,255,.7)" set:html={text} />
+                </div>
+              ))}
             </div>
             <a href="https://vercel.com/signup" target="_blank"
-              class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold transition-colors"
+              class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold"
               style="background: var(--hub-accent); color: white">
               Criar conta na Vercel →
             </a>
           </div>
           <div class="px-5 py-3" style="background: rgba(255,255,255,.02); border-top: 1px solid var(--hub-border)">
-            <p class="text-xs" style="color: rgba(255,255,255,.3)">
-              ✓ Já tem conta? Pode pular para o próximo passo.
-            </p>
+            <p class="text-xs" style="color: rgba(255,255,255,.3)">✓ Já tem conta? Pule para o próximo passo.</p>
           </div>
         </div>
       </div>
 
-      <!-- STEP 3: Cursor -->
-      <div class="mb-10" id="cursor">
+      <!-- STEP 3: Token -->
+      <div class="mb-8" id="token">
         <div class="flex items-center gap-3 mb-4">
           <span class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shrink-0"
             style="background: var(--hub-accent); color: white">3</span>
-          <h3 class="text-xl font-bold text-white">Baixe e instale o Cursor</h3>
-        </div>
-        <div class="rounded-xl overflow-hidden" style="background: var(--hub-bg-elevated); border: 1px solid var(--hub-border)">
-          <div class="p-5">
-            <p class="text-sm leading-relaxed mb-4" style="color: rgba(255,255,255,.6)">
-              O Cursor é um editor de código com inteligência artificial. É ele que vai
-              construir as páginas do site automaticamente a partir dos prompts gerados pelo f8.
-              Você não precisa saber programar — o Cursor faz tudo.
-            </p>
-            <div class="space-y-2 mb-5">
-              <div class="flex items-start gap-3">
-                <span class="w-5 h-5 rounded-full flex items-center justify-center text-xs shrink-0 mt-0.5"
-                  style="background: rgba(107,57,244,.2); color: var(--hub-accent)">a</span>
-                <p class="text-sm" style="color: rgba(255,255,255,.7)">
-                  Acesse <strong class="text-white">cursor.com</strong> e clique em <strong class="text-white">"Download"</strong>
-                </p>
-              </div>
-              <div class="flex items-start gap-3">
-                <span class="w-5 h-5 rounded-full flex items-center justify-center text-xs shrink-0 mt-0.5"
-                  style="background: rgba(107,57,244,.2); color: var(--hub-accent)">b</span>
-                <p class="text-sm" style="color: rgba(255,255,255,.7)">
-                  Instale normalmente (Windows: execute o <code class="px-1 rounded" style="background:rgba(255,255,255,.1)">.exe</code> / Mac: arraste para Aplicativos)
-                </p>
-              </div>
-              <div class="flex items-start gap-3">
-                <span class="w-5 h-5 rounded-full flex items-center justify-center text-xs shrink-0 mt-0.5"
-                  style="background: rgba(107,57,244,.2); color: var(--hub-accent)">c</span>
-                <p class="text-sm" style="color: rgba(255,255,255,.7)">
-                  Crie uma conta gratuita no Cursor e abra a pasta
-                  <code class="px-1 rounded" style="background:rgba(255,255,255,.1)">f8</code>
-                  no editor (<strong class="text-white">File → Open Folder</strong>)
-                </p>
-              </div>
-              <div class="flex items-start gap-3">
-                <span class="w-5 h-5 rounded-full flex items-center justify-center text-xs shrink-0 mt-0.5"
-                  style="background: rgba(107,57,244,.2); color: var(--hub-accent)">d</span>
-                <p class="text-sm" style="color: rgba(255,255,255,.7)">
-                  No terminal do Cursor, rode: <code class="px-1.5 py-0.5 rounded font-mono text-xs" style="background:rgba(255,255,255,.1)">bun run dev</code>
-                  — isso inicia o f8 Studio
-                </p>
-              </div>
-            </div>
-            <a href="https://cursor.com/download" target="_blank"
-              class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold transition-colors"
-              style="background: var(--hub-accent); color: white">
-              Baixar o Cursor →
-            </a>
-          </div>
-          <div class="px-5 py-3" style="background: rgba(255,255,255,.02); border-top: 1px solid var(--hub-border)">
-            <p class="text-xs" style="color: rgba(255,255,255,.3)">
-              ✓ Já tem o Cursor instalado? Pode pular para o próximo passo.
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <!-- STEP 4: Token -->
-      <div class="mb-10" id="token">
-        <div class="flex items-center gap-3 mb-4">
-          <span class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shrink-0"
-            style="background: var(--hub-accent); color: white">4</span>
           <h3 class="text-xl font-bold text-white">Configure o token do GitHub</h3>
         </div>
         <div class="rounded-xl overflow-hidden" style="background: var(--hub-bg-elevated); border: 1px solid var(--hub-border)">
           <div class="p-5">
-            <p class="text-sm leading-relaxed mb-4" style="color: rgba(255,255,255,.6)">
-              O token é como uma senha especial que permite ao f8 criar repositórios no seu GitHub automaticamente,
-              sem que você precise fazer nada manualmente. É criado em segundos.
+            <p class="text-sm leading-relaxed mb-3" style="color: rgba(255,255,255,.6)">
+              O token é uma senha especial que permite ao f8 criar repositórios no GitHub automaticamente.
+              É criado em menos de 1 minuto.
             </p>
+            <div class="p-3 rounded-lg mb-4 text-sm"
+              style="background: rgba(245,158,11,.06); border: 1px solid rgba(245,158,11,.2); color: rgba(255,255,255,.6)">
+              💡 Faça isso com esta página aberta — você vai colar o token aqui no passo f.
+            </div>
             <div class="space-y-3 mb-5">
-              <div class="flex items-start gap-3">
-                <span class="w-5 h-5 rounded-full flex items-center justify-center text-xs shrink-0 mt-0.5"
-                  style="background: rgba(107,57,244,.2); color: var(--hub-accent)">a</span>
-                <div>
-                  <p class="text-sm mb-1" style="color: rgba(255,255,255,.7)">
-                    Acesse este link (já com as configurações certas):
-                  </p>
-                  <a href="https://github.com/settings/tokens/new?scopes=repo&description=f8-studio" target="_blank"
-                    class="inline-flex items-center gap-1.5 text-sm font-medium underline"
-                    style="color: var(--hub-accent)">
-                    github.com → Gerar token ↗
-                  </a>
+              {[
+                {
+                  text: 'Clique neste link para ir direto para a página de criação do token:',
+                  link: { href: 'https://github.com/settings/tokens/new?scopes=repo&description=f8-studio', label: 'Gerar token no GitHub ↗' },
+                },
+                { text: 'O GitHub pode pedir para confirmar sua senha — entre com a senha da sua conta' },
+                { text: 'O campo <strong>"Note"</strong> já vai estar preenchido com <code>f8-studio</code> — não mude' },
+                { text: 'Em <strong>"Expiration"</strong>, clique no menu e selecione <strong>"No expiration"</strong>' },
+                { text: 'Role a página para baixo e confirme que a caixa <code>repo</code> está marcada com ✓' },
+                { text: 'Clique no botão verde <strong>"Generate token"</strong> no final da página' },
+                { text: '<strong style="color:#fbbf24">Copie o token agora</strong> — ele começa com <code>ghp_</code> e aparece em verde. Se sair da página, ele some para sempre' },
+                {
+                  text: 'Cole o token no f8 Studio → Configurações:',
+                  link: { href: '/', label: 'Ir para Configurações →', internal: true },
+                },
+              ].map((item, i) => (
+                <div class="flex items-start gap-3">
+                  <span class="w-5 h-5 rounded-full flex items-center justify-center text-xs shrink-0 mt-0.5"
+                    style="background: rgba(107,57,244,.2); color: var(--hub-accent)">{String.fromCharCode(97+i)}</span>
+                  <div>
+                    <p class="text-sm" style="color: rgba(255,255,255,.7)" set:html={item.text} />
+                    {item.link && (
+                      <a href={item.link.href} target={item.link.internal ? '_self' : '_blank'}
+                        class="inline-flex items-center gap-1.5 mt-1.5 px-3 py-1.5 rounded-lg text-sm font-medium"
+                        style="background: var(--hub-accent); color: white">
+                        {item.link.label}
+                      </a>
+                    )}
+                  </div>
                 </div>
-              </div>
-              <div class="flex items-start gap-3">
-                <span class="w-5 h-5 rounded-full flex items-center justify-center text-xs shrink-0 mt-0.5"
-                  style="background: rgba(107,57,244,.2); color: var(--hub-accent)">b</span>
-                <p class="text-sm" style="color: rgba(255,255,255,.7)">
-                  No campo "Note" escreva algo como <strong class="text-white">f8-studio</strong> para lembrar para que serve
-                </p>
-              </div>
-              <div class="flex items-start gap-3">
-                <span class="w-5 h-5 rounded-full flex items-center justify-center text-xs shrink-0 mt-0.5"
-                  style="background: rgba(107,57,244,.2); color: var(--hub-accent)">c</span>
-                <p class="text-sm" style="color: rgba(255,255,255,.7)">
-                  Deixe o campo <strong class="text-white">Expiration</strong> em "No expiration"
-                </p>
-              </div>
-              <div class="flex items-start gap-3">
-                <span class="w-5 h-5 rounded-full flex items-center justify-center text-xs shrink-0 mt-0.5"
-                  style="background: rgba(107,57,244,.2); color: var(--hub-accent)">d</span>
-                <p class="text-sm" style="color: rgba(255,255,255,.7)">
-                  Confirme que a caixa <code class="px-1 rounded" style="background:rgba(255,255,255,.1)">repo</code> está marcada e clique em
-                  <strong class="text-white">"Generate token"</strong>
-                </p>
-              </div>
-              <div class="flex items-start gap-3">
-                <span class="w-5 h-5 rounded-full flex items-center justify-center text-xs shrink-0 mt-0.5"
-                  style="background: rgba(107,57,244,.2); color: var(--hub-accent)">e</span>
-                <p class="text-sm" style="color: rgba(255,255,255,.7)">
-                  Copie o token gerado (começa com <code class="px-1 rounded" style="background:rgba(255,255,255,.1)">ghp_</code>) —
-                  <strong class="text-white">copie agora, ele não aparece de novo</strong>
-                </p>
-              </div>
-              <div class="flex items-start gap-3">
-                <span class="w-5 h-5 rounded-full flex items-center justify-center text-xs shrink-0 mt-0.5"
-                  style="background: rgba(107,57,244,.2); color: var(--hub-accent)">f</span>
-                <div>
-                  <p class="text-sm mb-2" style="color: rgba(255,255,255,.7)">
-                    Cole o token aqui no f8 Studio → Configurações
-                  </p>
-                  <a href="/" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-colors"
-                    style="background: var(--hub-accent); color: white">
-                    Ir para Configurações →
-                  </a>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
           <div class="px-5 py-3" style="background: rgba(255,255,255,.02); border-top: 1px solid var(--hub-border)">
             <p class="text-xs" style="color: rgba(255,255,255,.35)">
-              🔒 O token fica salvo só no seu computador, dentro da pasta do f8. Nunca é enviado para nenhum servidor externo.
+              🔒 O token fica salvo só no seu computador. Nunca é enviado para servidores externos.
             </p>
           </div>
         </div>
       </div>
 
       <!-- Tudo pronto -->
-      <div class="mb-12 p-6 rounded-xl text-center"
+      <div class="mb-10 p-6 rounded-xl text-center"
         style="background: rgba(107,57,244,.1); border: 1px solid rgba(107,57,244,.3)">
         <div class="text-3xl mb-3">🎉</div>
         <h3 class="text-lg font-bold text-white mb-2">Tudo configurado!</h3>
         <p class="text-sm mb-5" style="color: rgba(255,255,255,.6)">
-          Agora você está pronto para criar seu primeiro site. Clique abaixo para começar.
+          Agora você está pronto para criar seu primeiro site.
         </p>
-        <a href="/" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-white font-semibold text-sm transition-colors"
+        <a href="/" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-white font-semibold text-sm"
           style="background: var(--hub-accent)">
           Criar meu primeiro site →
         </a>
       </div>
 
-      <!-- Como funciona o fluxo -->
-      <div class="mb-12">
-        <h3 class="text-lg font-bold text-white mb-2">Como funciona o processo</h3>
-        <p class="text-sm mb-6" style="color: rgba(255,255,255,.45)">
+      <!-- Como funciona -->
+      <div class="mb-10">
+        <h3 class="text-lg font-bold text-white mb-2">Como criar um site</h3>
+        <p class="text-sm mb-5" style="color: rgba(255,255,255,.45)">
           Depois de configurado, este é o fluxo para criar cada site:
         </p>
         <div class="space-y-3">
           {[
             {
               n: '1',
-              title: 'Capture um site de referência',
-              desc: 'No f8 Studio, vá em "Criar Site", dê um nome ao projeto e cole a URL de um site que você gostou. O f8 captura o visual automaticamente.',
+              title: 'Abra o f8 Studio',
+              desc: 'No editor (Cursor ou Antigravity), com a pasta f8 aberta, rode bun run dev no terminal e acesse localhost:4321 no navegador.',
             },
             {
               n: '2',
-              title: 'Gere os prompts',
-              desc: 'Com um clique, o f8 gera os prompts necessários para o Cursor recriar o site.',
+              title: 'Capture o site de referência',
+              desc: 'Clique em "Criar Site", dê um nome ao projeto e cole a URL do site que você quer copiar. O f8 captura o visual automaticamente.',
             },
             {
               n: '3',
-              title: 'Cole no Cursor e aguarde',
-              desc: 'Abra o Cursor, pressione Ctrl+L (ou ⌘L no Mac), selecione o modo Agent, cole o comando e aguarde. O Cursor constrói todas as páginas.',
+              title: 'Gere os prompts',
+              desc: 'Clique em "Capturar páginas" e aguarde. Depois clique em "Gerar prompts". Tudo automático.',
             },
             {
               n: '4',
+              title: 'Cole no editor e aguarde',
+              desc: 'No editor de IA, pressione Ctrl+L (Windows) ou ⌘+L (Mac), selecione o modo Agent, cole o comando e pressione Enter. Não mexa em nada — pode levar de 5 a 20 minutos.',
+            },
+            {
+              n: '5',
               title: 'Publique na Vercel',
-              desc: 'No f8 Studio, vá em "Meus Sites", clique em "Publicar na Vercel" e siga as instruções. Em minutos o site estará no ar.',
+              desc: 'De volta ao f8 Studio, vá em "Meus Sites", clique em "Publicar na Vercel" e siga as instruções. Em minutos o site estará no ar com um link público.',
             },
           ].map(step => (
             <div class="flex items-start gap-4 p-4 rounded-xl"
@@ -384,33 +283,41 @@ import WizardLayout from '../layouts/WizardLayout.astro';
       </div>
 
       <!-- FAQ -->
-      <div class="mb-12">
+      <div class="mb-10">
         <h3 class="text-lg font-bold text-white mb-5">Dúvidas frequentes</h3>
         <div class="space-y-3">
           {[
             {
               q: 'Preciso saber programar?',
-              a: 'Não. O Cursor e o f8 fazem todo o trabalho técnico. Você só precisa seguir os passos deste guia.',
+              a: 'Não. O editor de IA e o f8 fazem todo o trabalho técnico. Você só precisa seguir os passos deste guia.',
             },
             {
               q: 'É gratuito?',
-              a: 'GitHub, Vercel e a conta básica do Cursor são gratuitos. O Cursor tem um limite de uso no plano gratuito — para uso intenso, o plano pago custa ~$20/mês.',
-            },
-            {
-              q: 'Quanto tempo leva para o site ficar pronto?',
-              a: 'A configuração inicial leva ~15 minutos (uma vez só). Depois, criar um site do zero leva entre 30 minutos e 2 horas, dependendo da complexidade.',
-            },
-            {
-              q: 'Posso usar qualquer site como referência?',
-              a: 'Sim, qualquer URL funciona. Sites com mais páginas geram mais prompts. Recomendamos começar com sites simples de 3 a 5 páginas.',
+              a: 'GitHub, Vercel e a conta básica do Cursor/Antigravity são gratuitos. Para uso intenso, planos pagos ficam em torno de R$100/mês.',
             },
             {
               q: 'O site some se eu fechar o computador?',
-              a: 'Não. Depois de publicado na Vercel, o site fica no ar 24h por dia, mesmo com seu computador desligado.',
+              a: 'Não. Depois de publicado na Vercel, o site fica no ar 24h por dia, mesmo com seu computador desligado. O f8 Studio (localhost:4321) só funciona com o computador ligado — mas isso só é necessário para criar sites, não para mantê-los no ar.',
             },
             {
-              q: 'E se o Cursor travar ou dar erro?',
-              a: 'Feche o chat, reabra com Ctrl+L e cole o mesmo comando novamente. O Cursor consegue continuar de onde parou.',
+              q: 'Como abro o f8 nas próximas vezes?',
+              a: 'Abra o editor (Cursor ou Antigravity) → File → Open Folder → selecione a pasta f8 → abra o terminal (Ctrl+` no Windows, ⌘+` no Mac) → rode bun run dev → acesse localhost:4321 no navegador.',
+            },
+            {
+              q: 'O bun run dev deu erro de "cannot find package"',
+              a: 'Rode bun install no terminal primeiro (dentro da pasta f8), aguarde terminar e depois rode bun run dev normalmente.',
+            },
+            {
+              q: 'E se o editor de IA parar no meio ou der erro?',
+              a: 'Feche o chat, reabra com Ctrl+L (ou ⌘+L) e cole o mesmo comando novamente. O editor consegue continuar de onde parou na maioria dos casos.',
+            },
+            {
+              q: 'E se o f8 Studio não abrir no navegador?',
+              a: 'Abra o terminal dentro do editor e rode: bun run kill-ports e depois bun run dev. Se ainda não funcionar, feche e reabra o editor.',
+            },
+            {
+              q: 'Posso usar qualquer site como referência?',
+              a: 'Sim, qualquer URL funciona. Recomendamos começar com sites simples de 3 a 5 páginas para o primeiro projeto.',
             },
           ].map(item => (
             <details class="rounded-xl overflow-hidden group"
@@ -428,13 +335,17 @@ import WizardLayout from '../layouts/WizardLayout.astro';
         </div>
       </div>
 
-      <!-- Suporte -->
-      <div class="p-5 rounded-xl mb-8" style="background: rgba(255,255,255,.03); border: 1px solid var(--hub-border)">
-        <p class="text-sm font-semibold text-white mb-1">Ficou com dúvida?</p>
-        <p class="text-sm" style="color: rgba(255,255,255,.5)">
-          Entre no grupo de suporte da 8links ou envie uma mensagem para o professor.
+      <!-- Suporte / Feedback -->
+      <div class="p-5 rounded-xl mb-8" style="background: rgba(107,57,244,.06); border: 1px solid rgba(107,57,244,.2)">
+        <p class="text-sm font-semibold text-white mb-1">Ficou com dúvida ou encontrou um problema?</p>
+        <p class="text-sm mb-4" style="color: rgba(255,255,255,.5)">
+          Entre no grupo de suporte da 8links ou envie um feedback direto pelo f8 Studio.
           Não tente resolver problemas técnicos sozinho — peça ajuda, estamos aqui para isso.
         </p>
+        <a href="/" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold"
+          style="background: var(--hub-accent); color: white">
+          Enviar feedback →
+        </a>
       </div>
 
     </main>

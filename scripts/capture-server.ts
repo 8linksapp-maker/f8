@@ -452,6 +452,54 @@ try {
         }
       }
 
+      if (pathname === '/api/feedback' && req.method === 'POST') {
+        try {
+          const body = (await req.json()) as {
+            tipo: string;
+            descricao: string;
+            nome?: string;
+            email?: string;
+          };
+          const { tipo, descricao, nome, email } = body;
+          if (!tipo || !descricao) {
+            return new Response(JSON.stringify({ error: 'tipo e descricao são obrigatórios' }), { status: 400, headers: { 'Content-Type': 'application/json', ...CORS } });
+          }
+          const token = process.env.FEEDBACK_TOKEN;
+          if (!token) {
+            return new Response(JSON.stringify({ error: 'FEEDBACK_TOKEN não configurado' }), { status: 500, headers: { 'Content-Type': 'application/json', ...CORS } });
+          }
+          const id = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+          const feedback = {
+            id,
+            tipo,
+            ferramenta: 'f8 Studio',
+            descricao,
+            nome: nome || null,
+            email: email || null,
+            whatsapp: null,
+            screenshot: null,
+            created_at: new Date().toISOString(),
+            status: 'backlog',
+          };
+          const filePath = `feedback/${new Date().toISOString().slice(0, 10)}-${id}.json`;
+          const content = Buffer.from(JSON.stringify(feedback, null, 2), 'utf-8').toString('base64');
+          const ghRes = await fetch(`https://api.github.com/repos/8linksapp-maker/feedback-cnx-astro/contents/${filePath}`, {
+            method: 'PUT',
+            headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: `Feedback f8: ${tipo}`, content, branch: 'main' }),
+          });
+          if (!ghRes.ok) {
+            const err = await ghRes.text();
+            console.error('\x1b[31m✖ Erro ao salvar feedback:\x1b[0m', err);
+            return new Response(JSON.stringify({ error: 'Erro ao salvar feedback' }), { status: 500, headers: { 'Content-Type': 'application/json', ...CORS } });
+          }
+          console.log(`  \x1b[32m✓\x1b[0m Feedback recebido: ${tipo}`);
+          return new Response(JSON.stringify({ success: true, id }), { headers: { 'Content-Type': 'application/json', ...CORS } });
+        } catch (e) {
+          return new Response(JSON.stringify({ error: (e as Error).message }), { status: 500, headers: { 'Content-Type': 'application/json', ...CORS } });
+        }
+      }
+
       if (pathname === '/api/github/create-repo' && req.method === 'POST') {
         try {
           const body = (await req.json()) as { slug: string; repoName?: string; private?: boolean; doPush?: boolean };
@@ -555,7 +603,7 @@ try {
         try {
           const projectRoot = join(__dirname, '..');
           const sitesDir = join(projectRoot, 'sites');
-          const list: { name: string; slug: string; path: string; createdAt: string; displayName?: string; deployUrl?: string; remoteUrl?: string; branch: string; hasBuild?: boolean; outputMode?: string }[] = [];
+          const list: { name: string; slug: string; path: string; createdAt: string; displayName?: string; deployUrl?: string; remoteUrl?: string; branch: string; hasBuild?: boolean }[] = [];
           if (existsSync(sitesDir)) {
             const entries = readdirSync(sitesDir, { withFileTypes: true });
             for (const e of entries) {
@@ -566,7 +614,6 @@ try {
                 let deployUrl = '';
                 let remoteUrl = '';
                 let branch = 'main';
-                let outputMode = 'site';
                 try {
                   if (existsSync(projectPath)) {
                     const meta = JSON.parse(readFileSync(projectPath, 'utf-8'));
@@ -575,13 +622,12 @@ try {
                     deployUrl = meta.deployUrl || '';
                     remoteUrl = meta.remoteUrl || '';
                     branch = meta.branch || 'main';
-                    outputMode = meta.outputMode === 'theme' ? 'theme' : 'site';
                   }
                   const stat = statSync(join(sitesDir, e.name));
                   if (!createdAt) createdAt = stat.mtime?.toISOString?.() || new Date().toISOString();
                 } catch (_) {}
                 const hasBuild = existsSync(join(sitesDir, e.name, 'dist'));
-                list.push({ name: e.name, slug: e.name, path: `sites/${e.name}`, createdAt, displayName, deployUrl: deployUrl || undefined, remoteUrl: remoteUrl || undefined, branch, hasBuild, outputMode });
+                list.push({ name: e.name, slug: e.name, path: `sites/${e.name}`, createdAt, displayName, deployUrl: deployUrl || undefined, remoteUrl: remoteUrl || undefined, branch, hasBuild });
               }
             }
             list.sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
@@ -619,59 +665,6 @@ try {
           return new Response(JSON.stringify({ success: true, deployUrl: meta.deployUrl }), { headers: { 'Content-Type': 'application/json', ...CORS } });
         } catch (e) {
           console.error('\x1b[31m✖ Erro ao atualizar deployUrl:\x1b[0m', e);
-          return new Response(JSON.stringify({ error: (e as Error).message }), { status: 500, headers: { 'Content-Type': 'application/json', ...CORS } });
-        }
-      }
-
-      const exportThemeMatch = pathname.match(/^\/api\/sites\/([^/]+)\/export-theme$/);
-      if (exportThemeMatch && req.method === 'POST') {
-        const [, slug] = exportThemeMatch;
-        if (!slug || slug.includes('..')) {
-          return new Response(JSON.stringify({ error: 'slug obrigatório' }), { status: 400, headers: { 'Content-Type': 'application/json', ...CORS } });
-        }
-        const projectRoot = join(__dirname, '..');
-        const siteDir = join(projectRoot, 'sites', slug);
-        const projectPath = join(siteDir, 'project.json');
-        if (!existsSync(siteDir)) {
-          return new Response(JSON.stringify({ error: 'Site não encontrado' }), { status: 404, headers: { 'Content-Type': 'application/json', ...CORS } });
-        }
-        try {
-          const { exportThemeAsCnx } = await import('./export-theme-cnx.ts');
-          const { buffer } = await exportThemeAsCnx(slug);
-          return new Response(buffer, {
-            headers: {
-              'Content-Type': 'application/zip',
-              'Content-Disposition': `attachment; filename="tema-${slug}.zip"`,
-              'Content-Length': String(buffer.length),
-              ...CORS,
-            },
-          });
-        } catch (e) {
-          console.error('\x1b[31m✖ Erro ao exportar tema:\x1b[0m', e);
-          return new Response(JSON.stringify({ error: (e as Error).message }), { status: 500, headers: { 'Content-Type': 'application/json', ...CORS } });
-        }
-      }
-
-      const outputModeMatch = pathname.match(/^\/api\/sites\/([^/]+)\/output-mode$/);
-      if (outputModeMatch && req.method === 'POST') {
-        const [, slug] = outputModeMatch;
-        try {
-          const body = (await req.json()) as { outputMode?: string };
-          const outputMode = body?.outputMode === 'theme' ? 'theme' : 'site';
-          if (!slug || slug.includes('..')) {
-            return new Response(JSON.stringify({ error: 'slug obrigatório' }), { status: 400, headers: { 'Content-Type': 'application/json', ...CORS } });
-          }
-          const projectRoot = join(__dirname, '..');
-          const projectPath = join(projectRoot, 'sites', slug, 'project.json');
-          if (!existsSync(projectPath)) {
-            return new Response(JSON.stringify({ error: 'Site não encontrado' }), { status: 404, headers: { 'Content-Type': 'application/json', ...CORS } });
-          }
-          const meta = JSON.parse(readFileSync(projectPath, 'utf-8'));
-          meta.outputMode = outputMode;
-          writeFileSync(projectPath, JSON.stringify(meta, null, 2), 'utf-8');
-          return new Response(JSON.stringify({ success: true, outputMode }), { headers: { 'Content-Type': 'application/json', ...CORS } });
-        } catch (e) {
-          console.error('\x1b[31m✖ Erro ao atualizar outputMode:\x1b[0m', e);
           return new Response(JSON.stringify({ error: (e as Error).message }), { status: 500, headers: { 'Content-Type': 'application/json', ...CORS } });
         }
       }

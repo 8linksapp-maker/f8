@@ -67,6 +67,13 @@ import WizardLayout from '../layouts/WizardLayout.astro';
         </svg>
         Guia de uso
       </a>
+
+      <button data-nav="feedback" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="shrink-0">
+          <path d="M2 2h12a1 1 0 011 1v7a1 1 0 01-1 1H9l-3 3v-3H2a1 1 0 01-1-1V3a1 1 0 011-1z" fill="currentColor" opacity=".7"/>
+        </svg>
+        Feedback
+      </button>
     </nav>
 
     <!-- Bottom -->
@@ -492,6 +499,71 @@ import WizardLayout from '../layouts/WizardLayout.astro';
           </div>
         </div>
 
+        <!-- ─────────────── VIEW: Feedback ─────────────── -->
+        <div id="view-feedback" class="hidden max-w-lg">
+          <div class="mb-6">
+            <h2 class="text-xl font-bold text-white mb-1">Enviar Feedback</h2>
+            <p class="text-sm" style="color: rgba(255,255,255,.4)">Encontrou um problema ou tem uma sugestão? Conta pra gente.</p>
+          </div>
+
+          <div class="rounded-xl overflow-hidden" style="background: var(--hub-bg-elevated); border: 1px solid var(--hub-border)">
+            <div class="p-6">
+              <form id="feedback-form" class="space-y-4">
+
+                <div>
+                  <label class="block text-sm font-medium text-white mb-1.5">Tipo <span style="color:var(--hub-accent)">*</span></label>
+                  <select id="fb-tipo" required
+                    class="w-full px-3 py-2.5 rounded-lg text-sm text-white outline-none"
+                    style="background: rgba(255,255,255,.06); border: 1px solid var(--hub-border)">
+                    <option value="">Selecione...</option>
+                    <option value="bug">🐛 Bug — algo não funciona</option>
+                    <option value="erro">❌ Erro — mensagem de erro ou travamento</option>
+                    <option value="sugestao">💡 Sugestão — ideia de melhoria</option>
+                    <option value="duvida">❓ Dúvida — preciso de ajuda</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="block text-sm font-medium text-white mb-1.5">Descrição <span style="color:var(--hub-accent)">*</span></label>
+                  <textarea id="fb-descricao" required rows="4" placeholder="Descreva o problema ou sugestão com o máximo de detalhes. Se for um erro, diga o que você fez antes de acontecer."
+                    class="w-full px-3 py-2.5 rounded-lg text-sm text-white outline-none resize-none"
+                    style="background: rgba(255,255,255,.06); border: 1px solid var(--hub-border)"></textarea>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                    <label class="block text-sm font-medium text-white mb-1.5">Seu nome <span style="color:rgba(255,255,255,.3);font-weight:400">(opcional)</span></label>
+                    <input id="fb-nome" type="text" placeholder="Como te chamamos?"
+                      class="w-full px-3 py-2.5 rounded-lg text-sm text-white outline-none"
+                      style="background: rgba(255,255,255,.06); border: 1px solid var(--hub-border)" />
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-white mb-1.5">E-mail <span style="color:rgba(255,255,255,.3);font-weight:400">(opcional)</span></label>
+                    <input id="fb-email" type="email" placeholder="Para respondermos"
+                      class="w-full px-3 py-2.5 rounded-lg text-sm text-white outline-none"
+                      style="background: rgba(255,255,255,.06); border: 1px solid var(--hub-border)" />
+                  </div>
+                </div>
+
+                <div id="fb-error" class="hidden text-sm px-3 py-2.5 rounded-lg"
+                  style="background: rgba(239,68,68,.1); border: 1px solid rgba(239,68,68,.3); color: #fca5a5"></div>
+
+                <div id="fb-success" class="hidden text-sm px-3 py-2.5 rounded-lg"
+                  style="background: rgba(34,197,94,.1); border: 1px solid rgba(34,197,94,.3); color: #86efac">
+                  ✓ Feedback enviado! Obrigado — vamos analisar em breve.
+                </div>
+
+                <button type="submit" id="fb-submit"
+                  class="w-full py-2.5 rounded-lg text-white text-sm font-semibold transition-colors"
+                  style="background: var(--hub-accent)">
+                  Enviar feedback
+                </button>
+
+              </form>
+            </div>
+          </div>
+        </div>
+
       </div>
     </main>
   </div>
@@ -667,6 +739,7 @@ import WizardLayout from '../layouts/WizardLayout.astro';
     sites: 'Meus Sites',
     create: 'Criar Site',
     settings: 'Configurações',
+    feedback: 'Feedback',
   };
 
   function navigateTo(view) {
@@ -1501,6 +1574,53 @@ Execute em ordem no Cursor. Aguarde cada etapa antes da próxima.
     } catch (err) {
       showToast('error', err instanceof Error ? err.message : 'Erro ao criar site');
       if (btn) { btn.disabled = false; btn.textContent = 'Criar site →'; }
+    }
+  });
+
+  // ─── Feedback form ────────────────────────────────────────────────────────
+
+  document.getElementById('feedback-form')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById('fb-submit');
+    const errorEl = document.getElementById('fb-error');
+    const successEl = document.getElementById('fb-success');
+    const tipo = (document.getElementById('fb-tipo') as HTMLSelectElement)?.value;
+    const descricao = (document.getElementById('fb-descricao') as HTMLTextAreaElement)?.value;
+    const nome = (document.getElementById('fb-nome') as HTMLInputElement)?.value;
+    const email = (document.getElementById('fb-email') as HTMLInputElement)?.value;
+
+    errorEl?.classList.add('hidden');
+    successEl?.classList.add('hidden');
+
+    if (!tipo || !descricao.trim()) {
+      errorEl!.textContent = 'Preencha o tipo e a descrição antes de enviar.';
+      errorEl?.classList.remove('hidden');
+      return;
+    }
+
+    btn!.textContent = 'Enviando...';
+    btn!.setAttribute('disabled', '');
+
+    try {
+      const res = await fetch('http://localhost:3001/api/feedback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tipo, descricao: descricao.trim(), nome: nome || undefined, email: email || undefined }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        successEl?.classList.remove('hidden');
+        (document.getElementById('feedback-form') as HTMLFormElement)?.reset();
+      } else {
+        errorEl!.textContent = data.error || 'Erro ao enviar. Tente novamente.';
+        errorEl?.classList.remove('hidden');
+      }
+    } catch {
+      errorEl!.textContent = 'Não foi possível conectar. Verifique se o f8 está rodando.';
+      errorEl?.classList.remove('hidden');
+    } finally {
+      btn!.textContent = 'Enviar feedback';
+      btn!.removeAttribute('disabled');
     }
   });
 
