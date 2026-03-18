@@ -482,62 +482,88 @@
         <h2>Baixe o f8 Studio para o seu computador</h2>
       </div>
       <p class="step-desc">
-        Você precisa baixar os arquivos do f8 Studio. É como baixar qualquer outro programa — você vai receber um arquivo ZIP e extrair ele.
+        Vamos baixar os arquivos do f8 direto pelo terminal com um comando simples.
       </p>
-
-      <ul class="substeps">
-        <li>
-          <span class="dot">a</span>
-          <span>Acesse: <a href="https://github.com/8linksapp-maker/f8/archive/refs/heads/main.zip" target="_blank"><strong>Clique aqui para baixar o f8 (arquivo ZIP) ↗</strong></a></span>
-        </li>
-        <li>
-          <span class="dot">b</span>
-          <span>O download vai começar automaticamente. Aguarde terminar.</span>
-        </li>
-      </ul>
 
       <!-- Windows -->
       <div data-os="windows">
+        <p class="step-desc" style="margin-bottom:10px">Primeiro, instale o Git — ele é necessário para baixar o f8:</p>
         <ul class="substeps">
           <li>
+            <span class="dot">a</span>
+            <span>Acesse <a href="https://git-scm.com/download/win" target="_blank"><strong>git-scm.com/download/win ↗</strong></a> e baixe o instalador</span>
+          </li>
+          <li>
+            <span class="dot">b</span>
+            <span>Execute o <code>.exe</code> baixado e clique em <strong>"Next"</strong> em todas as telas — as opções padrão já estão certas</span>
+          </li>
+          <li>
             <span class="dot">c</span>
-            <span>Abra a pasta <strong>Downloads</strong> no seu computador</span>
+            <span><strong>Feche e reabra o PowerShell</strong> para o Git ser reconhecido</span>
           </li>
           <li>
             <span class="dot">d</span>
-            <span>Clique com o botão direito no arquivo <code>f8-main.zip</code> e escolha <strong>"Extrair tudo..."</strong></span>
+            <span>No PowerShell, navegue até onde quer salvar o f8. Exemplo — para salvar na Área de Trabalho:</span>
           </li>
+        </ul>
+        <div style="background:#111;border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:12px 16px;margin-bottom:14px;font-family:'SF Mono',Consolas,monospace;font-size:13px;color:#a78bfa">
+          cd Desktop
+        </div>
+        <ul class="substeps">
           <li>
             <span class="dot">e</span>
-            <span>Na janela que abrir, clique em <strong>"Extrair"</strong> — uma pasta chamada <code>f8-main</code> vai aparecer</span>
+            <span>Agora rode o comando abaixo para baixar o f8:</span>
           </li>
+        </ul>
+        <div style="background:#111;border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:12px 16px;margin-bottom:14px;font-family:'SF Mono',Consolas,monospace;font-size:13px;color:#a78bfa;word-break:break-all">
+          git clone https://github.com/8linksapp-maker/f8.git
+        </div>
+        <ul class="substeps">
           <li>
             <span class="dot">f</span>
-            <span>Mova essa pasta para um lugar fácil de achar, como a <strong>Área de Trabalho</strong> ou <strong>Documentos</strong></span>
+            <span>Uma pasta chamada <code>f8</code> vai aparecer na Área de Trabalho — é lá que estão os arquivos</span>
           </li>
         </ul>
       </div>
 
       <!-- Mac -->
       <div data-os="mac">
+        <div class="tip">
+          <span class="icon">💡</span>
+          <span>Abra o <strong>Terminal</strong> — pressione <code>⌘ + Espaço</code>, escreva "Terminal" e pressione Enter.</span>
+        </div>
+        <ul class="substeps">
+          <li>
+            <span class="dot">a</span>
+            <span>No Terminal, navegue até onde quer salvar o f8. Exemplo — para salvar na Área de Trabalho:</span>
+          </li>
+        </ul>
+        <div style="background:#111;border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:12px 16px;margin-bottom:14px;font-family:'SF Mono',Consolas,monospace;font-size:13px;color:#a78bfa">
+          cd Desktop
+        </div>
+        <ul class="substeps">
+          <li>
+            <span class="dot">b</span>
+            <span>Rode o comando abaixo para baixar o f8:</span>
+          </li>
+        </ul>
+        <div style="background:#111;border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:12px 16px;margin-bottom:14px;font-family:'SF Mono',Consolas,monospace;font-size:13px;color:#a78bfa;word-break:break-all">
+          git clone https://github.com/8linksapp-maker/f8.git
+        </div>
         <ul class="substeps">
           <li>
             <span class="dot">c</span>
-            <span>Abra a pasta <strong>Downloads</strong> no Finder</span>
+            <span>Se o Mac pedir para instalar as ferramentas de desenvolvedor, clique em <strong>"Instalar"</strong> e aguarde — é automático</span>
           </li>
           <li>
             <span class="dot">d</span>
-            <span>Dê dois cliques no arquivo <code>f8-main.zip</code> — ele vai extrair sozinho e criar a pasta <code>f8-main</code></span>
-          </li>
-          <li>
-            <span class="dot">e</span>
-            <span>Mova essa pasta para um lugar fácil de achar, como a <strong>Área de Trabalho</strong> ou <strong>Documentos</strong></span>
+            <span>Uma pasta chamada <code>f8</code> vai aparecer na Área de Trabalho — é lá que estão os arquivos</span>
           </li>
         </ul>
       </div>
 
     </div>
-    <div class="card-footer">✓ Pronto quando você tiver a pasta <code>f8-main</code> salva no seu computador.</div>
+    <div class="card-footer">✓ Pronto quando a pasta <code>f8</code> aparecer no local escolhido.</div>
   </div>
 
   <!-- Step 5: Editor — CURSOR -->
@@ -570,7 +596,7 @@
         </li>
         <li>
           <span class="dot">d</span>
-          <span>Abra a pasta <code>f8-main</code> no Cursor: <strong>File → Open Folder</strong>, navegue até onde você salvou a pasta e selecione ela</span>
+          <span>Abra a pasta <code>f8</code> no Cursor: <strong>File → Open Folder</strong>, navegue até onde você salvou a pasta e selecione ela</span>
         </li>
         <li data-os="windows">
           <span class="dot">e</span>
@@ -620,7 +646,7 @@
         </li>
         <li>
           <span class="dot">d</span>
-          <span>Abra a pasta <code>f8-main</code> no Antigravity: <strong>File → Open Folder</strong>, navegue até onde você salvou a pasta e selecione ela</span>
+          <span>Abra a pasta <code>f8</code> no Antigravity: <strong>File → Open Folder</strong>, navegue até onde você salvou a pasta e selecione ela</span>
         </li>
         <li data-os="windows">
           <span class="dot">e</span>
@@ -713,7 +739,7 @@
             <div class="flow-title">Abra o f8 Studio</div>
             <div class="flow-desc">
               No <span data-editor="cursor">Cursor</span><span data-editor="antigravity">Antigravity</span>,
-              com a pasta <code>f8-main</code> aberta, rode <code>bun run dev</code> no terminal e acesse <code>localhost:4321</code> no navegador.
+              com a pasta <code>f8</code> aberta, rode <code>bun run dev</code> no terminal e acesse <code>localhost:4321</code> no navegador.
             </div>
           </div>
         </div>
