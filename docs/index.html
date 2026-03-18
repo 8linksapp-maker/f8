@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Como usar o f8 Studio</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #0f0f0f;
+      color: #fff;
+      line-height: 1.6;
+    }
+
+    a { color: #a78bfa; }
+    a:hover { color: #c4b5fd; }
+
+    .container {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 40px 20px 80px;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      padding: 48px 0 40px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      margin-bottom: 40px;
+    }
+    .logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .logo-icon {
+      width: 40px; height: 40px;
+      background: #6b39f4;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .logo-icon svg { display: block; }
+    .logo-text { font-size: 22px; font-weight: 700; }
+    .logo-text span { color: #a78bfa; }
+    .header h1 { font-size: 28px; font-weight: 700; margin-bottom: 10px; }
+    .header p { font-size: 16px; color: rgba(255,255,255,.5); max-width: 480px; margin: 0 auto; }
+
+    /* Section header */
+    .section-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: #a78bfa;
+      margin-bottom: 6px;
+    }
+
+    /* Cards */
+    .card {
+      background: #1a1a1a;
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 14px;
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+    .card-body { padding: 20px 22px; }
+    .card-footer {
+      background: rgba(255,255,255,.02);
+      border-top: 1px solid rgba(255,255,255,.06);
+      padding: 10px 22px;
+      font-size: 12px;
+      color: rgba(255,255,255,.3);
+    }
+
+    /* Step header inside card */
+    .step-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .step-num {
+      width: 32px; height: 32px;
+      background: #6b39f4;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 700;
+      flex-shrink: 0;
+    }
+    .step-header h2 { font-size: 17px; font-weight: 700; }
+    .step-desc { font-size: 14px; color: rgba(255,255,255,.55); margin-bottom: 14px; line-height: 1.55; }
+
+    /* Sub-steps */
+    .substeps { list-style: none; display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+    .substeps li {
+      display: flex; align-items: flex-start; gap: 10px;
+      font-size: 14px; color: rgba(255,255,255,.7);
+    }
+    .substeps li .dot {
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      background: rgba(107,57,244,.25);
+      color: #a78bfa;
+      font-size: 11px; font-weight: 600;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 2px;
+    }
+    .substeps li strong { color: #fff; }
+    code {
+      background: rgba(255,255,255,.1);
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-family: 'SF Mono', Consolas, monospace;
+      font-size: 12px;
+    }
+
+    /* CTA Button */
+    .btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 10px 18px;
+      background: #6b39f4;
+      color: #fff;
+      border-radius: 8px;
+      font-size: 14px; font-weight: 600;
+      text-decoration: none;
+      transition: background .15s;
+    }
+    .btn:hover { background: #5a2dd9; color: #fff; }
+    .btn-outline {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,.15);
+      color: rgba(255,255,255,.7);
+    }
+    .btn-outline:hover { background: rgba(255,255,255,.05); color: #fff; }
+
+    /* Flow section */
+    .flow { display: flex; flex-direction: column; gap: 0; }
+    .flow-item {
+      display: flex; align-items: flex-start; gap: 14px;
+      padding: 16px 0;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+    .flow-item:last-child { border-bottom: none; }
+    .flow-num {
+      width: 28px; height: 28px;
+      border: 1.5px solid #6b39f4;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 700;
+      color: #a78bfa;
+      flex-shrink: 0; margin-top: 1px;
+    }
+    .flow-title { font-size: 15px; font-weight: 600; color: #fff; margin-bottom: 3px; }
+    .flow-desc { font-size: 13px; color: rgba(255,255,255,.5); line-height: 1.5; }
+
+    /* FAQ */
+    details {
+      background: #1a1a1a;
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+    summary {
+      padding: 14px 18px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      color: rgba(255,255,255,.85);
+      list-style: none;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    summary::-webkit-details-marker { display: none; }
+    summary::after { content: '▼'; font-size: 10px; color: rgba(255,255,255,.35); transition: transform .2s; }
+    details[open] summary::after { transform: rotate(180deg); }
+    .faq-body {
+      padding: 0 18px 14px;
+      font-size: 14px;
+      color: rgba(255,255,255,.55);
+      line-height: 1.6;
+      border-top: 1px solid rgba(255,255,255,.06);
+      padding-top: 12px;
+    }
+
+    /* Success box */
+    .success-box {
+      background: rgba(107,57,244,.1);
+      border: 1px solid rgba(107,57,244,.3);
+      border-radius: 14px;
+      padding: 28px;
+      text-align: center;
+      margin: 32px 0;
+    }
+    .success-box .emoji { font-size: 36px; margin-bottom: 10px; }
+    .success-box h3 { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+    .success-box p { font-size: 14px; color: rgba(255,255,255,.5); margin-bottom: 18px; }
+
+    /* Divider */
+    .divider { border: none; border-top: 1px solid rgba(255,255,255,.07); margin: 36px 0; }
+
+    /* Tip box */
+    .tip {
+      background: rgba(245,158,11,.06);
+      border: 1px solid rgba(245,158,11,.2);
+      border-radius: 10px;
+      padding: 14px 16px;
+      display: flex; gap: 10px;
+      font-size: 13px;
+      color: rgba(255,255,255,.6);
+      margin-bottom: 12px;
+    }
+    .tip .icon { flex-shrink: 0; font-size: 15px; }
+
+    @media (max-width: 480px) {
+      .header h1 { font-size: 22px; }
+      .header p { font-size: 14px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="logo">
+      <div class="logo-icon">
+        <svg width="20" height="20" viewBox="0 0 14 14" fill="none">
+          <rect x="1" y="1" width="5" height="5" rx="1" fill="white"/>
+          <rect x="8" y="1" width="5" height="5" rx="1" fill="white"/>
+          <rect x="1" y="8" width="5" height="5" rx="1" fill="white"/>
+          <rect x="8" y="8" width="5" height="5" rx="1" fill="white"/>
+        </svg>
+      </div>
+      <span class="logo-text">f8 <span>Studio</span></span>
+    </div>
+    <h1>Como usar o f8 Studio</h1>
+    <p>Guia passo a passo para criar e publicar sites sem precisar saber programar.</p>
+  </div>
+
+
+  <!-- ── CONFIGURAÇÃO INICIAL ── -->
+  <p class="section-label">Configuração inicial — faça uma vez só</p>
+
+  <!-- Step 1: GitHub -->
+  <div class="card">
+    <div class="card-body">
+      <div class="step-header">
+        <div class="step-num">1</div>
+        <h2>Crie uma conta no GitHub</h2>
+      </div>
+      <p class="step-desc">
+        O GitHub é onde os arquivos dos seus sites ficam guardados na nuvem — pense nele como um
+        "Google Drive" para sites. É gratuito.
+      </p>
+      <ul class="substeps">
+        <li>
+          <span class="dot">a</span>
+          <span>Acesse <strong>github.com</strong> e clique em <strong>"Sign up"</strong></span>
+        </li>
+        <li>
+          <span class="dot">b</span>
+          <span>Crie com seu e-mail e escolha um nome de usuário (ex: <code>joao-silva</code>)</span>
+        </li>
+        <li>
+          <span class="dot">c</span>
+          <span>Confirme o e-mail — o plano gratuito já é suficiente</span>
+        </li>
+      </ul>
+      <a href="https://github.com/signup" target="_blank" class="btn">Criar conta no GitHub →</a>
+    </div>
+    <div class="card-footer">✓ Já tem conta? Pule para o próximo passo.</div>
+  </div>
+
+  <!-- Step 2: Vercel -->
+  <div class="card">
+    <div class="card-body">
+      <div class="step-header">
+        <div class="step-num">2</div>
+        <h2>Crie uma conta na Vercel</h2>
+      </div>
+      <p class="step-desc">
+        A Vercel é quem publica o seu site na internet — de graça, em segundos, com link automático.
+        Cada vez que você atualizar o site, ele publica sozinho.
+      </p>
+      <ul class="substeps">
+        <li>
+          <span class="dot">a</span>
+          <span>Acesse <strong>vercel.com</strong> e clique em <strong>"Sign Up"</strong></span>
+        </li>
+        <li>
+          <span class="dot">b</span>
+          <span>Clique em <strong>"Continue with GitHub"</strong> — use a mesma conta do passo 1</span>
+        </li>
+        <li>
+          <span class="dot">c</span>
+          <span>Escolha o plano <strong>Hobby</strong> (gratuito) e conclua o cadastro</span>
+        </li>
+      </ul>
+      <a href="https://vercel.com/signup" target="_blank" class="btn">Criar conta na Vercel →</a>
+    </div>
+    <div class="card-footer">✓ Já tem conta? Pule para o próximo passo.</div>
+  </div>
+
+  <!-- Step 3: Cursor -->
+  <div class="card">
+    <div class="card-body">
+      <div class="step-header">
+        <div class="step-num">3</div>
+        <h2>Baixe e instale o Cursor</h2>
+      </div>
+      <p class="step-desc">
+        O Cursor é o editor com inteligência artificial que vai construir as páginas do site automaticamente.
+        Você não precisa escrever nenhum código — o Cursor faz tudo.
+      </p>
+      <ul class="substeps">
+        <li>
+          <span class="dot">a</span>
+          <span>Acesse <strong>cursor.com</strong> e clique em <strong>"Download"</strong></span>
+        </li>
+        <li>
+          <span class="dot">b</span>
+          <span>Instale normalmente — Windows: execute o <code>.exe</code> / Mac: arraste para Aplicativos</span>
+        </li>
+        <li>
+          <span class="dot">c</span>
+          <span>Crie uma conta gratuita no Cursor quando ele pedir</span>
+        </li>
+        <li>
+          <span class="dot">d</span>
+          <span>Abra a pasta <code>f8</code> no Cursor: <strong>File → Open Folder</strong></span>
+        </li>
+        <li>
+          <span class="dot">e</span>
+          <span>No terminal do Cursor, rode <code>bun run dev</code> — isso inicia o f8 Studio</span>
+        </li>
+      </ul>
+      <a href="https://cursor.com/download" target="_blank" class="btn">Baixar o Cursor →</a>
+    </div>
+    <div class="card-footer">✓ Já tem o Cursor? Pule para o próximo passo.</div>
+  </div>
+
+  <!-- Step 4: Token -->
+  <div class="card">
+    <div class="card-body">
+      <div class="step-header">
+        <div class="step-num">4</div>
+        <h2>Configure o token do GitHub</h2>
+      </div>
+      <p class="step-desc">
+        O token é uma senha especial que permite ao f8 criar repositórios no GitHub automaticamente.
+        É criado em menos de 1 minuto.
+      </p>
+      <div class="tip">
+        <span class="icon">💡</span>
+        <span>Faça isso com o f8 Studio aberto no navegador em <strong style="color:#fff">localhost:4321</strong> — você vai colar o token lá no final.</span>
+      </div>
+      <ul class="substeps">
+        <li>
+          <span class="dot">a</span>
+          <span>Clique neste link:
+            <a href="https://github.com/settings/tokens/new?scopes=repo&description=f8-studio" target="_blank">
+              Gerar token no GitHub ↗
+            </a>
+          </span>
+        </li>
+        <li>
+          <span class="dot">b</span>
+          <span>No campo <strong>"Note"</strong> escreva: <code>f8-studio</code></span>
+        </li>
+        <li>
+          <span class="dot">c</span>
+          <span>Em <strong>"Expiration"</strong> selecione <strong>"No expiration"</strong></span>
+        </li>
+        <li>
+          <span class="dot">d</span>
+          <span>Confirme que a caixa <code>repo</code> está marcada e clique em <strong>"Generate token"</strong></span>
+        </li>
+        <li>
+          <span class="dot">e</span>
+          <span><strong style="color:#fbbf24">Copie o token agora</strong> (começa com <code>ghp_</code>) — ele não aparece de novo</span>
+        </li>
+        <li>
+          <span class="dot">f</span>
+          <span>No f8 Studio, clique em <strong>"Configurações"</strong> na sidebar, cole o token e salve</span>
+        </li>
+      </ul>
+    </div>
+    <div class="card-footer">🔒 O token fica salvo só no seu computador. Nunca é enviado para servidores externos.</div>
+  </div>
+
+  <!-- Tudo pronto -->
+  <div class="success-box">
+    <div class="emoji">🎉</div>
+    <h3>Configuração concluída!</h3>
+    <p>Agora você pode criar seu primeiro site. Abra o f8 Studio e clique em "Criar Site".</p>
+    <code style="background:rgba(107,57,244,.3);padding:6px 12px;border-radius:6px;font-size:13px;color:#c4b5fd">
+      http://localhost:4321
+    </code>
+  </div>
+
+  <hr class="divider" />
+
+
+  <!-- ── COMO CRIAR UM SITE ── -->
+  <p class="section-label" style="margin-bottom:14px">Como criar um site — do zero ao ar</p>
+
+  <div class="card">
+    <div class="card-body">
+      <div class="flow">
+        <div class="flow-item">
+          <div class="flow-num">1</div>
+          <div>
+            <div class="flow-title">Abra o f8 Studio</div>
+            <div class="flow-desc">No Cursor, rode <code>bun run dev</code> no terminal e acesse <code>localhost:4321</code> no navegador.</div>
+          </div>
+        </div>
+        <div class="flow-item">
+          <div class="flow-num">2</div>
+          <div>
+            <div class="flow-title">Crie um novo site</div>
+            <div class="flow-desc">Clique em "Criar Site" na barra lateral, dê um nome ao projeto (ex: <code>minha-clinica</code>) e clique em Criar.</div>
+          </div>
+        </div>
+        <div class="flow-item">
+          <div class="flow-num">3</div>
+          <div>
+            <div class="flow-title">Cole a URL do site de referência</div>
+            <div class="flow-desc">Abra o site que você quer copiar no navegador, copie o endereço da barra de cima e cole no f8. Pode colocar várias páginas, uma por linha.</div>
+          </div>
+        </div>
+        <div class="flow-item">
+          <div class="flow-num">4</div>
+          <div>
+            <div class="flow-title">Gere os prompts</div>
+            <div class="flow-desc">Clique em "Capturar páginas", aguarde terminar e depois clique em "Gerar prompts". Tudo automático.</div>
+          </div>
+        </div>
+        <div class="flow-item">
+          <div class="flow-num">5</div>
+          <div>
+            <div class="flow-title">Salve e copie o comando</div>
+            <div class="flow-desc">Clique em "Salvar prompts" e depois em "Copiar comando".</div>
+          </div>
+        </div>
+        <div class="flow-item">
+          <div class="flow-num">6</div>
+          <div>
+            <div class="flow-title">Cole no Cursor e aguarde</div>
+            <div class="flow-desc">No Cursor, pressione <code>Ctrl+L</code> (Windows) ou <code>⌘L</code> (Mac). Selecione o modo <strong>Agent</strong>, cole o comando e pressione Enter. Aguarde sem mexer em nada — pode levar alguns minutos.</div>
+          </div>
+        </div>
+        <div class="flow-item">
+          <div class="flow-num">7</div>
+          <div>
+            <div class="flow-title">Publique na Vercel</div>
+            <div class="flow-desc">De volta ao f8 Studio, vá em "Meus Sites", clique em "Publicar na Vercel" e siga as instruções. Em minutos o site estará no ar com um link público.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider" />
+
+
+  <!-- ── FAQ ── -->
+  <p class="section-label" style="margin-bottom:14px">Dúvidas frequentes</p>
+
+  <details>
+    <summary>Preciso saber programar?</summary>
+    <div class="faq-body">Não. O Cursor e o f8 fazem todo o trabalho técnico. Você só precisa seguir os passos deste guia.</div>
+  </details>
+
+  <details>
+    <summary>Quanto custa?</summary>
+    <div class="faq-body">GitHub, Vercel e a conta básica do Cursor são gratuitos. O Cursor tem um limite de uso no plano gratuito — para uso intenso, o plano pago custa cerca de R$100/mês.</div>
+  </details>
+
+  <details>
+    <summary>Quanto tempo leva para criar um site?</summary>
+    <div class="faq-body">A configuração inicial leva ~15 minutos (uma única vez). Depois, criar um site do zero leva entre 30 minutos e 2 horas dependendo da quantidade de páginas.</div>
+  </details>
+
+  <details>
+    <summary>O site some se eu fechar o computador?</summary>
+    <div class="faq-body">Não. Depois de publicado na Vercel, o site fica no ar 24h por dia, mesmo com seu computador desligado.</div>
+  </details>
+
+  <details>
+    <summary>Posso usar qualquer site como referência?</summary>
+    <div class="faq-body">Sim, qualquer URL funciona. Recomendamos começar com sites simples de 3 a 5 páginas para o primeiro projeto.</div>
+  </details>
+
+  <details>
+    <summary>E se o Cursor travar ou der erro?</summary>
+    <div class="faq-body">Feche o chat, reabra com Ctrl+L (ou ⌘L) e cole o mesmo comando novamente. O Cursor consegue continuar de onde parou.</div>
+  </details>
+
+  <details>
+    <summary>E se o f8 Studio não abrir?</summary>
+    <div class="faq-body">Abra o terminal do Cursor e rode: <code>bun run kill-ports</code> e depois <code>bun run dev</code>. Se ainda não funcionar, feche e reabra o Cursor.</div>
+  </details>
+
+  <hr class="divider" />
+
+  <div style="text-align:center;font-size:13px;color:rgba(255,255,255,.25);padding-bottom:20px">
+    f8 Studio · 8links Platform
+  </div>
+
+</div>
+</body>
+</html>

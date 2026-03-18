@@ -1,161 +1,116 @@
-# f8 – Boilerplate 8links
+# f8 Studio — Criador de Sites 8links
 
-Template Astro para criar sites PBN compatíveis com a plataforma 8links. Inclui sites de exemplo em `sites/` (techai, 8links-test, 8links-test2) prontos para customização e deploy na Vercel.
+Ferramenta para criar sites profissionais a partir de referências visuais, sem precisar saber programar.
+Feito para ser usado junto com o **Cursor** (editor com IA).
 
-## Estrutura
+---
 
-```
-f8/
-├── sites/               # Sites de exemplo (techai, 8links-test, etc.)
-│   └── techai/          # Site completo com blog, SEO, WhatsApp
-├── public/
-├── src/
-│   ├── components/      # Header, Footer, PostCard
-│   ├── config.ts        # Configuração do site (nome, nicho, meta)
-│   ├── content/
-│   │   └── config.ts    # Schema dos posts (compatível com bridge 8links)
-│   ├── layouts/
-│   ├── pages/
-│   │   ├── index.astro
-│   │   ├── blog/
-│   │   ├── sobre.astro
-│   │   └── contato.astro
-│   └── styles/
-├── astro.config.mjs
-├── vercel.json          # Deploy Vercel
-└── package.json
-```
+## 👉 [Clique aqui para ver o guia de configuração](https://htmlpreview.github.io/?https://github.com/medeirosjj123/f8/blob/main/docs/index.html)
+
+> Como criar contas no GitHub e Vercel, baixar o Cursor, configurar o token e criar seu primeiro site.
+
+---
+
+---
 
 ## Início rápido
 
-### Hub (capture, wizard)
+### Pré-requisitos
+- [Bun](https://bun.sh) instalado (`curl -fsSL https://bun.sh/install | bash`)
+- [Cursor](https://cursor.com) instalado
+- Conta no [GitHub](https://github.com) e na [Vercel](https://vercel.com)
+
+### Rodar o f8
 
 ```bash
 cd f8
 bun install
-bun run dev   # ou bun run dev:full
-```
-
-Acesse http://localhost:4321
-
-### Rodar um site (ex: techai)
-
-```bash
-cd f8/sites/techai
-bun install
 bun run dev
-bun run build   # build de produção
 ```
 
-> **Referências:** As imagens de referência ficam em `sites/techai/public/reference/`. Use a captura (`/capture`) ou faça upload de tema para gerá-las.
+Acesse **http://localhost:4321** — o painel abre no navegador.
 
-## Criar um novo site a partir do boilerplate
+---
 
-1. **Clone o f8** (ou baixe do seu repositório):
-   ```bash
-   git clone <url-do-repo-f8> meu-novo-site
-   cd meu-novo-site
-   ```
+## Como criar um site (fluxo resumido)
 
-2. **Instale e rode a captura**:
-   ```bash
-   bun install
-   bun run dev:full   # ou: bun run capture-server (term 1) + bun run dev (term 2)
-   ```
+1. **Abrir o f8** — rode `bun run dev` no Cursor e acesse http://localhost:4321
+2. **Criar Site** — clique em "Criar Site" na sidebar, dê um nome ao projeto
+3. **Capturar referência** — cole a URL do site que quer usar como modelo
+4. **Gerar prompts** — clique em "Gerar prompts" (automático, sem configuração)
+5. **Salvar + copiar** — salve os prompts e copie o comando
+6. **Colar no Cursor** — abra o chat do Cursor (`Ctrl+L` / `⌘L`), modo **Agent**, cole e aguarde
+7. **Publicar** — em "Meus Sites", clique em "Publicar na Vercel"
 
-3. **Cole a URL do site de referência** na homepage e clique em Capturar. As screenshots vão para `public/reference/`.
+---
 
-4. **Construa o template** com base nas imagens (ou com IA).
+## Estrutura do projeto
 
-5. **Suba para outro repo** — crie um novo repositório no GitHub para esse site e faça o push:
-   ```bash
-   git remote set-url origin https://github.com/SEU-USUARIO/meu-novo-site.git
-   git push -u origin main
-   ```
+```
+f8/
+├── src/
+│   ├── pages/
+│   │   ├── index.astro       # Painel principal (f8 Studio)
+│   │   └── guia.astro        # Guia de configuração para iniciantes
+│   ├── layouts/
+│   └── styles/
+├── scripts/
+│   ├── capture-server.ts     # Servidor de captura (porta 3001)
+│   ├── prepare-site.ts       # Cria scaffold de novo site
+│   └── check-links-standalone.cjs
+├── sites/                    # Sites gerados ficam aqui
+│   ├── meu-site/
+│   └── outro-site/
+├── public/
+│   └── reference/            # Screenshots e HTML capturados
+├── data/
+│   └── credentials.json      # Token do GitHub (local, não sobe pro git)
+└── package.json
+```
 
-Cada novo site PBN = clone do f8 → captura do template → customização → push para repo próprio.
+---
 
-## Personalização
+## Comandos
 
-1. **src/config.ts** - Nome do site, descrição, nicho, URL, redes sociais
-2. **src/content/posts/** - Adicione posts em Markdown (a bridge 8links faz push aqui)
-3. **src/styles/global.css** - Cores e tipografia
-4. **tailwind.config.mjs** - Tema Tailwind
+| Comando | O que faz |
+|---------|-----------|
+| `bun run dev` | Inicia o painel + servidor de captura |
+| `bun run build` | Gera build de produção |
+| `bun run kill-ports` | Mata processos nas portas 3001 e 4321 |
+| `bun run dev:fresh` | Mata portas e reinicia o dev |
 
-## Schema dos posts (frontmatter)
+---
 
-Compatível com o formato que a bridge 8links envia:
+## Conectar site à rede 8links (PBN)
+
+Após publicar o site na Vercel, adicione-o em **Sites da Rede** no painel 8links:
+
+| Campo | Valor |
+|-------|-------|
+| `domain` | URL do site na Vercel (ex: `meu-site.vercel.app`) |
+| `username` | `seu-usuario-github/nome-do-repo` |
+| `application_password` | Token do GitHub (o mesmo configurado no f8) |
+| `primary_niche` | Nicho principal do site |
+
+A bridge 8links faz push dos posts via Git → Vercel faz deploy automático.
+
+---
+
+## Posts (formato Markdown)
+
+Os posts ficam em `sites/[nome]/src/content/posts/` e seguem este formato:
 
 ```yaml
 ---
 title: Título do post
-description: Descrição para SEO (opcional)
+description: Descrição para SEO
 pubDate: 2025-03-07
 draft: false
-image: /caminho/imagem.jpg
-tags: [tag1, tag2]
+image: /imagens/capa.jpg
+tags: [categoria1, categoria2]
 ---
 
 Conteúdo em Markdown...
 ```
 
-O slug é gerado automaticamente a partir do nome do arquivo (ex: `meu-post.md` → `/blog/meu-post`).
-
-## Deploy na Vercel
-
-1. Conecte o repositório à Vercel
-2. O `vercel.json` já está configurado para sites estáticos
-3. Deploy automático a cada push na branch principal
-
-```bash
-bun run build   # Testar build localmente
-```
-
-## Conexão com 8links
-
-Para conectar este site à 8links como site da rede (PBN):
-
-1. Faça deploy do site (Vercel ou Cloudflare Pages)
-2. Crie um repositório no GitHub com o código
-3. Na 8links, adicione o site em **Sites da Rede** com:
-   - **domain**: seu domínio (ex: meu-site.vercel.app)
-   - **api_url**: URL da bridge 8links (ex: https://bridge.8links.io/wp-json)
-   - **username**: owner/repo (ex: seu-usuario/meu-pbn)
-   - **application_password**: Token do GitHub com permissão no repositório
-   - **primary_niche**, **secondary_niche**, **tertiary_niche**: Nichos do site
-   - **da**: Domain Authority
-
-A bridge recebe os posts da 8links e faz push no Git. O deploy é disparado automaticamente.
-
-## Referências — Upload de tema ou captura por URL
-
-A página `/capture` oferece duas opções:
-
-### 1. Upload de tema (recomendado)
-
-Baixe o tema HTML (ex: ThemeForest), zip o arquivo e faça upload. O tema é extraído para `public/themes/current/` e fica disponível para personalização (tradução, customização).
-
-**Fluxo:**
-1. `bun run capture-server` + `bun run dev`
-2. Acesse http://localhost:4321/capture
-3. Selecione o .zip e clique em **Enviar tema**
-4. Clique em **Personalizar tema** para ver o preview
-5. Edite os arquivos em `public/themes/current/` para traduzir e customizar
-
-### 2. Captura por URL (alternativo)
-
-Extrai screenshots, HTML e CSS de uma URL para referência.
-
-**Requisito:** Bun e Puppeteer (Chromium incluído)
-
-## Scripts
-
-| Comando | Descrição |
-|---------|-----------|
-| `bun run dev` | Servidor de desenvolvimento |
-| `bun run dev:full` | Dev + servidor de captura juntos |
-| `bun run capture-server` | Servidor de captura (porta 3001) |
-| `bun run build` | Build para produção |
-| `bun run preview` | Preview do build |
-
-**Se a porta 3001 estiver em uso:** `lsof -ti:3001 | xargs kill -9`
+O slug é gerado pelo nome do arquivo: `meu-post.md` → `/blog/meu-post`
