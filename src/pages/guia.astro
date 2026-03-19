@@ -316,6 +316,14 @@ import WizardLayout from '../layouts/WizardLayout.astro';
               a: 'Abra o terminal dentro do editor e rode: bun run kill-ports e depois bun run dev. Se ainda não funcionar, feche e reabra o editor.',
             },
             {
+              q: 'O navegador abriu em localhost:4327 (ou outra porta) em vez de 4321',
+              a: 'Isso acontece quando o f8 já está rodando em segundo plano e ocupou a porta 4321. Feche o terminal, rode bun run kill-ports e depois bun run dev novamente. O f8 vai abrir em localhost:4321 normalmente.',
+            },
+            {
+              q: 'Apliquei uma atualização — o que fazer agora?',
+              a: 'Após aplicar a atualização pelo botão no f8, você precisa reiniciar o servidor para que as mudanças entrem em vigor. Pressione Ctrl+C no terminal para parar, e rode bun run dev novamente. A nova versão estará ativa.',
+            },
+            {
               q: 'Posso usar qualquer site como referência?',
               a: 'Sim, qualquer URL funciona. Recomendamos começar com sites simples de 3 a 5 páginas para o primeiro projeto.',
             },
