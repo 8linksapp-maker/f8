@@ -74,6 +74,16 @@ import WizardLayout from '../layouts/WizardLayout.astro';
         </svg>
         Feedback
       </button>
+
+      <!-- Update alert (yellow, shown when update available) -->
+      <button id="update-alert-nav" class="hidden w-full mt-1 flex items-start gap-2.5 px-3 py-2.5 rounded-lg text-left transition-opacity hover:opacity-90"
+        style="background: rgba(234,179,8,.12); border: 1px solid rgba(234,179,8,.35)">
+        <span class="text-base leading-none mt-0.5">⚠️</span>
+        <div>
+          <p class="text-xs font-semibold" style="color: #fde047">Atualização disponível</p>
+          <p class="text-xs mt-0.5" style="color: rgba(253,224,71,.6)">Clique para atualizar o f8</p>
+        </div>
+      </button>
     </nav>
 
     <!-- Bottom -->
@@ -1813,12 +1823,13 @@ Execute em ordem no Cursor. Aguarde cada etapa antes da próxima.
       _updateData = data;
       const badge = document.getElementById('update-badge-btn');
       if (badge) badge.classList.toggle('hidden', !data.available);
+      const alert = document.getElementById('update-alert-nav');
+      if (alert) alert.classList.toggle('hidden', !data.available);
     } catch (_) {}
   }
 
-  document.getElementById('update-badge-btn')?.addEventListener('click', () => {
-    openUpdateModal();
-  });
+  document.getElementById('update-badge-btn')?.addEventListener('click', () => openUpdateModal());
+  document.getElementById('update-alert-nav')?.addEventListener('click', () => openUpdateModal());
 
   function openUpdateModal() {
     const modal = document.getElementById('update-modal');
@@ -1865,8 +1876,8 @@ Execute em ordem no Cursor. Aguarde cada etapa antes da próxima.
       if (data.success) {
         if (statusEl) statusEl.textContent = '✓ Atualização aplicada! Reinicie o servidor (feche e abra o terminal) para usar a nova versão.';
         if (btn) btn.textContent = '✓ Concluído';
-        const badge = document.getElementById('update-badge-btn');
-        if (badge) badge.classList.add('hidden');
+        document.getElementById('update-badge-btn')?.classList.add('hidden');
+        document.getElementById('update-alert-nav')?.classList.add('hidden');
         _updateData = null;
       } else {
         if (statusEl) statusEl.textContent = `Erro: ${data.error || 'Falha ao aplicar. Tente manualmente.'}`;
