@@ -91,8 +91,55 @@ import WizardLayout from '../layouts/WizardLayout.astro';
         <span id="api-dot" class="w-2 h-2 rounded-full shrink-0 transition-colors" style="background: #f59e0b"></span>
         <span id="api-status-label" class="text-xs truncate" style="color: rgba(255,255,255,.35)">Verificando...</span>
       </div>
+
+      <!-- Version label -->
+      <div class="px-3 pb-1">
+        <span id="app-version-label" class="text-xs font-mono" style="color: rgba(255,255,255,.18)">f8 v—</span>
+      </div>
+
+      <!-- Update badge -->
+      <button id="update-badge-btn" class="hidden w-full flex items-center gap-2.5 px-3 py-2 rounded-lg transition-colors text-left"
+        style="background: rgba(107,57,244,.15); border: 1px solid rgba(107,57,244,.35)">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" class="shrink-0" style="color: var(--hub-accent)">
+          <path d="M8 1v6l3-3M8 7l-3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M2.5 10A5.5 5.5 0 108 2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+        </svg>
+        <span class="text-xs font-medium" style="color: var(--hub-accent)">Atualização disponível</span>
+      </button>
     </div>
   </aside>
+
+  <!-- Update Modal -->
+  <div id="update-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4"
+    style="background: rgba(0,0,0,.7)">
+    <div class="w-full max-w-md rounded-2xl p-6 space-y-4"
+      style="background: var(--hub-bg-elevated); border: 1px solid var(--hub-border)">
+      <div class="flex items-start justify-between">
+        <div>
+          <h3 class="text-base font-bold text-white">Atualização disponível</h3>
+          <p class="text-xs mt-0.5" style="color: rgba(255,255,255,.4)" id="update-version-label"></p>
+        </div>
+        <button id="update-modal-close" class="text-lg leading-none transition-opacity hover:opacity-60" style="color: rgba(255,255,255,.4)">✕</button>
+      </div>
+
+      <div id="update-changelog-box" class="rounded-lg p-3 max-h-48 overflow-y-auto space-y-1"
+        style="background: rgba(0,0,0,.3); border: 1px solid var(--hub-border)">
+        <p class="text-xs" style="color: rgba(255,255,255,.3)">Carregando...</p>
+      </div>
+
+      <div id="update-apply-area" class="space-y-3">
+        <p class="text-xs" style="color: rgba(255,255,255,.45)">
+          A atualização será aplicada automaticamente. Seus sites e dados não serão afetados.
+        </p>
+        <button id="update-apply-btn"
+          class="w-full py-2.5 rounded-xl text-white text-sm font-semibold transition-colors"
+          style="background: var(--hub-accent)">
+          Aplicar atualização
+        </button>
+        <p id="update-apply-status" class="text-xs text-center hidden" style="color: rgba(255,255,255,.5)"></p>
+      </div>
+    </div>
+  </div>
 
   <!-- ═══════════════════════════ MAIN ═══════════════════════════ -->
   <div class="ml-60 flex-1 flex flex-col min-h-screen">
@@ -346,29 +393,35 @@ import WizardLayout from '../layouts/WizardLayout.astro';
           <!-- STEP 2: Prompts -->
           <section id="step-2" class="wizard-step hidden">
             <div class="mb-6">
-              <h2 class="text-xl font-bold text-white mb-1">Prompts gerados</h2>
+              <h2 class="text-xl font-bold text-white mb-1">Prompts prontos!</h2>
               <p class="text-sm" style="color: rgba(255,255,255,.5)">
-                Os prompts foram criados para copiar a referência 100%. Siga os passos abaixo.
+                Os prompts foram salvos automaticamente. Cole o comando abaixo no Cursor para começar.
               </p>
             </div>
 
-            <!-- Passo a passo visual -->
+            <!-- Bloco hero: comando visível -->
+            <div class="p-5 rounded-xl mb-6" style="background: var(--hub-bg-elevated); border: 1px solid var(--hub-accent)">
+              <p class="text-xs font-semibold mb-2" style="color: rgba(255,255,255,.4); text-transform: uppercase; letter-spacing: .05em">Cole este comando no Cursor</p>
+              <div class="flex items-center gap-3">
+                <code id="cursor-command" class="flex-1 text-sm font-mono px-3 py-2 rounded-lg" style="background: rgba(255,255,255,.06); color: rgba(255,255,255,.9)">rode os @f8/prompts-gerados.md na sequencia</code>
+                <button type="button" id="copy-initial-btn"
+                  class="px-4 py-2 rounded-lg text-sm font-semibold shrink-0 transition-colors"
+                  style="background: var(--hub-accent); color: white">
+                  Copiar
+                </button>
+              </div>
+            </div>
+
+            <!-- 3 passos simplificados -->
             <div class="space-y-3 mb-8">
 
               <div class="flex items-start gap-4 p-4 rounded-xl"
                 style="background: var(--hub-bg-elevated); border: 1px solid var(--hub-border)">
                 <span class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shrink-0 mt-0.5"
                   style="background: var(--hub-accent); color: white">1</span>
-                <div class="flex-1 min-w-0">
-                  <p class="text-white font-semibold text-sm mb-1">Salve os prompts</p>
-                  <p class="text-xs mb-3" style="color: rgba(255,255,255,.5)">
-                    Clique no botão abaixo para salvar os prompts no arquivo <code class="px-1 py-0.5 rounded" style="background:rgba(255,255,255,.1)">prompts-gerados.md</code>
-                  </p>
-                  <button type="button" id="save-prompts-btn"
-                    class="px-4 py-2 rounded-lg text-white text-sm font-semibold transition-colors"
-                    style="background: var(--hub-accent)">
-                    Salvar prompts
-                  </button>
+                <div>
+                  <p class="text-white font-semibold text-sm mb-1">Copie o comando acima</p>
+                  <p class="text-xs" style="color: rgba(255,255,255,.5)">Clique no botão Copiar ao lado do comando.</p>
                 </div>
               </div>
 
@@ -376,16 +429,11 @@ import WizardLayout from '../layouts/WizardLayout.astro';
                 style="background: var(--hub-bg-elevated); border: 1px solid var(--hub-border)">
                 <span class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shrink-0 mt-0.5"
                   style="background: rgba(255,255,255,.1); color: rgba(255,255,255,.6)">2</span>
-                <div class="flex-1 min-w-0">
-                  <p class="text-white font-semibold text-sm mb-1">Copie o comando</p>
-                  <p class="text-xs mb-3" style="color: rgba(255,255,255,.5)">
-                    Clique para copiar o comando que instrui o Cursor a executar os prompts em ordem.
+                <div>
+                  <p class="text-white font-semibold text-sm mb-1">Cole no Cursor</p>
+                  <p class="text-xs" style="color: rgba(255,255,255,.5)">
+                    Pressione <kbd class="px-1.5 py-0.5 rounded text-xs" style="background:rgba(255,255,255,.1)">⌘L</kbd> (ou <kbd class="px-1.5 py-0.5 rounded text-xs" style="background:rgba(255,255,255,.1)">Ctrl+L</kbd>), certifique que está no modo <strong class="text-white">Agent</strong>, cole e pressione Enter. Aguarde — pode levar alguns minutos.
                   </p>
-                  <button type="button" id="copy-initial-btn"
-                    class="px-4 py-2 rounded-lg text-sm font-semibold transition-colors"
-                    style="border: 1px solid var(--hub-border); color: rgba(255,255,255,.8)">
-                    Copiar comando
-                  </button>
                 </div>
               </div>
 
@@ -393,32 +441,6 @@ import WizardLayout from '../layouts/WizardLayout.astro';
                 style="background: var(--hub-bg-elevated); border: 1px solid var(--hub-border)">
                 <span class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shrink-0 mt-0.5"
                   style="background: rgba(255,255,255,.1); color: rgba(255,255,255,.6)">3</span>
-                <div>
-                  <p class="text-white font-semibold text-sm mb-1">Abra o Cursor e cole o comando</p>
-                  <p class="text-xs" style="color: rgba(255,255,255,.5)">
-                    No Cursor, pressione <kbd class="px-1.5 py-0.5 rounded text-xs" style="background:rgba(255,255,255,.1)">Ctrl+L</kbd> (ou <kbd class="px-1.5 py-0.5 rounded text-xs" style="background:rgba(255,255,255,.1)">⌘L</kbd> no Mac) para abrir o chat,
-                    certifique que está no modo <strong class="text-white">Agent</strong>, cole o comando e pressione Enter.
-                  </p>
-                </div>
-              </div>
-
-              <div class="flex items-start gap-4 p-4 rounded-xl"
-                style="background: var(--hub-bg-elevated); border: 1px solid var(--hub-border)">
-                <span class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shrink-0 mt-0.5"
-                  style="background: rgba(255,255,255,.1); color: rgba(255,255,255,.6)">4</span>
-                <div>
-                  <p class="text-white font-semibold text-sm mb-1">Aguarde o Cursor terminar</p>
-                  <p class="text-xs" style="color: rgba(255,255,255,.5)">
-                    O Cursor vai construir todas as páginas automaticamente. Não mexa em nada até ele terminar.
-                    Pode demorar alguns minutos.
-                  </p>
-                </div>
-              </div>
-
-              <div class="flex items-start gap-4 p-4 rounded-xl"
-                style="background: var(--hub-bg-elevated); border: 1px solid var(--hub-border)">
-                <span class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shrink-0 mt-0.5"
-                  style="background: rgba(255,255,255,.1); color: rgba(255,255,255,.6)">5</span>
                 <div class="flex-1">
                   <p class="text-white font-semibold text-sm mb-1">Publique o site</p>
                   <p class="text-xs mb-3" style="color: rgba(255,255,255,.5)">
@@ -452,7 +474,28 @@ import WizardLayout from '../layouts/WizardLayout.astro';
         <div id="view-settings" class="hidden max-w-lg">
           <div class="mb-6">
             <h2 class="text-xl font-bold text-white mb-1">Configurações</h2>
-            <p class="text-sm" style="color: rgba(255,255,255,.4)">Credenciais para publicar seus sites.</p>
+            <p class="text-sm" style="color: rgba(255,255,255,.4)">Credenciais e manutenção do f8.</p>
+          </div>
+
+          <!-- Reference cleanup card -->
+          <div class="rounded-xl overflow-hidden mb-5"
+            style="background: var(--hub-bg-elevated); border: 1px solid var(--hub-border)">
+            <div class="p-6">
+              <h3 class="text-base font-semibold text-white mb-1">Referências capturadas</h3>
+              <p class="text-sm mb-4" style="color: rgba(255,255,255,.5)">
+                Remove referências de projetos antigos ou excluídos que ficaram na pasta <code class="px-1 py-0.5 rounded text-xs" style="background:rgba(255,255,255,.08)">public/reference/</code>.
+              </p>
+              <div id="orphans-status" class="flex items-center gap-3 mb-4">
+                <span class="text-xs" style="color: rgba(255,255,255,.35)">Verificando...</span>
+              </div>
+              <div id="orphans-list" class="hidden rounded-lg p-3 mb-4 max-h-36 overflow-y-auto space-y-1"
+                style="background: rgba(0,0,0,.25); border: 1px solid var(--hub-border)">
+              </div>
+              <button id="cleanup-refs-btn" class="hidden px-4 py-2 rounded-lg text-sm font-medium text-white transition-colors"
+                style="background: rgba(239,68,68,.15); border: 1px solid rgba(239,68,68,.3); color: #f87171">
+                Remover referências não usadas
+              </button>
+            </div>
           </div>
           <div class="rounded-xl overflow-hidden"
             style="background: var(--hub-bg-elevated); border: 1px solid var(--hub-border)">
@@ -707,6 +750,19 @@ import WizardLayout from '../layouts/WizardLayout.astro';
   class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[400] px-4 py-3 rounded-lg text-sm font-medium shadow-xl max-w-md pointer-events-none opacity-0 transition-opacity duration-300"
   role="alert" aria-live="assertive"></div>
 
+<!-- ═══ Spotlight onboarding ═══ -->
+<div id="sp-overlay" class="hidden fixed inset-0" style="z-index:199;cursor:default">
+  <div id="sp-ring" style="position:absolute;border-radius:16px;border:2px solid rgba(107,57,244,.8);pointer-events:none"></div>
+  <div id="sp-lens" style="position:absolute;border-radius:12px;pointer-events:none;box-shadow:0 0 0 9999px rgba(0,0,0,.75)"></div>
+  <div id="sp-tip" style="position:absolute;background:#18182b;border:1px solid rgba(107,57,244,.45);border-radius:14px;padding:16px;width:268px;box-shadow:0 12px 40px rgba(0,0,0,.6)">
+    <p id="sp-msg" style="color:rgba(255,255,255,.88);font-size:13px;line-height:1.6;margin:0 0 14px"></p>
+    <button id="sp-ok" type="button"
+      style="display:block;width:100%;background:var(--hub-accent);color:white;border:none;padding:9px 0;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer">
+      Entendi →
+    </button>
+  </div>
+</div>
+
 <script define:vars={{ apiUrl: 'http://127.0.0.1:3001' }}>
   // ─── State ────────────────────────────────────────────────────────────────
   let capturedPages = [];
@@ -714,6 +770,66 @@ import WizardLayout from '../layouts/WizardLayout.astro';
   let cachedSites = [];
   const STORAGE_KEY = 'criador-project-name';
   const ONBOARDED_KEY = 'f8-onboarded';
+  const SP = 'f8sp_';
+  let _spAC = null;
+
+  // ─── Spotlight ────────────────────────────────────────────────────────────
+
+  function showSpotlight(el, msg, key) {
+    if (!el) return;
+    if (localStorage.getItem(SP + key)) return;
+    if (!document.getElementById('onboarding-overlay')?.classList.contains('hidden')) return;
+
+    if (_spAC) { _spAC.abort(); _spAC = null; }
+
+    const overlay = document.getElementById('sp-overlay');
+    const lens    = document.getElementById('sp-lens');
+    const ring    = document.getElementById('sp-ring');
+    const msgEl   = document.getElementById('sp-msg');
+    const tip     = document.getElementById('sp-tip');
+    if (!overlay || !lens || !msgEl || !tip) return;
+
+    const r = el.getBoundingClientRect();
+    const P = 10;
+    const lx = r.left - P, ly = r.top - P;
+    const lw = r.width + P * 2, lh = r.height + P * 2;
+
+    lens.style.left = lx + 'px'; lens.style.top = ly + 'px';
+    lens.style.width = lw + 'px'; lens.style.height = lh + 'px';
+    if (ring) {
+      ring.style.left = (lx - 4) + 'px'; ring.style.top = (ly - 4) + 'px';
+      ring.style.width = (lw + 8) + 'px'; ring.style.height = (lh + 8) + 'px';
+    }
+
+    msgEl.textContent = msg;
+
+    const TW = 268, GAP = 14;
+    let tx, ty;
+    if (lx < 280) { // sidebar element — tooltip to the right
+      tx = lx + lw + GAP;
+      ty = Math.max(8, ly + lh / 2 - 65);
+    } else {
+      tx = Math.max(8, Math.min(lx, window.innerWidth - TW - 8));
+      ty = (ly + lh + GAP + 140 < window.innerHeight) ? ly + lh + GAP : ly - GAP - 140;
+    }
+    tip.style.left = tx + 'px';
+    tip.style.top  = ty + 'px';
+
+    overlay.classList.remove('hidden');
+
+    const ac = new AbortController();
+    _spAC = ac;
+
+    function dismiss() {
+      localStorage.setItem(SP + key, '1');
+      overlay.classList.add('hidden');
+      ac.abort();
+      _spAC = null;
+    }
+
+    document.getElementById('sp-ok')?.addEventListener('click', dismiss, { signal: ac.signal });
+    overlay.addEventListener('click', (e) => { if (!tip.contains(e.target)) dismiss(); }, { signal: ac.signal });
+  }
 
   // ─── Utilities ────────────────────────────────────────────────────────────
 
@@ -758,10 +874,13 @@ import WizardLayout from '../layouts/WizardLayout.astro';
     if (view === 'dashboard') {
       loadSites().then(updateDashboard);
       checkTokenStatus();
+      setTimeout(() => showSpotlight(document.querySelector('[data-nav="create"]'), 'Clique aqui para criar o seu primeiro site', 'nav-create'), 600);
     } else if (view === 'sites') {
       loadSites();
+      setTimeout(() => showSpotlight(document.getElementById('new-project-form'), 'Digite um nome para o projeto (ex: minha-clinica) e clique em Criar', 'sites-form'), 300);
     } else if (view === 'settings') {
       refreshSettingsStatus();
+      loadOrphans();
     }
   }
 
@@ -885,7 +1004,7 @@ import WizardLayout from '../layouts/WizardLayout.astro';
 
   function showHub() { navigateTo('sites'); }
 
-  function showWizard(projectName) {
+  async function showWizard(projectName) {
     const slug = slugify(projectName);
     localStorage.setItem(STORAGE_KEY, slug);
     const nameEl = document.getElementById('current-project-name');
@@ -893,6 +1012,31 @@ import WizardLayout from '../layouts/WizardLayout.astro';
     const ctxBar = document.getElementById('wizard-context-bar');
     if (ctxBar) ctxBar.classList.remove('hidden');
     navigateTo('create');
+
+    // Restore previously captured pages for this project
+    capturedPages = [];
+    try {
+      const res = await fetch(`${apiUrl}/api/sites/${slug}/pages`);
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data.pages) && data.pages.length > 0) {
+          capturedPages = data.pages;
+          const logEl = document.getElementById('capture-log');
+          if (logEl) {
+            logEl.innerHTML = capturedPages.map(p =>
+              `<div style="color:var(--hub-accent)">✓ ${p.slug} (capturado anteriormente)</div>`
+            ).join('');
+          }
+          const resultEl = document.getElementById('capture-result');
+          resultEl?.classList.remove('hidden');
+          const countEl = document.getElementById('capture-count');
+          const statusEl = document.getElementById('capture-status');
+          if (countEl) countEl.textContent = `${capturedPages.length}/${capturedPages.length}`;
+          if (statusEl) statusEl.textContent = 'Páginas anteriores carregadas';
+        }
+      }
+    } catch (_) {}
+
     showStep(1);
   }
 
@@ -913,6 +1057,18 @@ import WizardLayout from '../layouts/WizardLayout.astro';
         numEl.textContent = isDone ? '✓' : String(stepN);
       }
     });
+    if (n === 1) setTimeout(() => showSpotlight(document.getElementById('capture-btn'), 'Cole a URL do site que quer copiar como modelo no campo acima e clique em Capturar páginas', 'step1-capture'), 350);
+    if (n === 2) {
+      // Update the command to reference this site's prompts file
+      const currentSlug = localStorage.getItem(STORAGE_KEY) || '';
+      const cmd = currentSlug
+        ? `rode os @f8/sites/${currentSlug}/prompts.md na sequencia`
+        : 'rode os @f8/prompts-gerados.md na sequencia';
+      const cmdEl = document.getElementById('cursor-command');
+      if (cmdEl) cmdEl.textContent = cmd;
+      window.__cursorCmd = cmd;
+      setTimeout(() => showSpotlight(document.getElementById('copy-initial-btn'), 'Copie este comando e cole no Cursor para construir o site automaticamente', 'step2-copy'), 350);
+    }
   }
 
   // ─── Render sites ─────────────────────────────────────────────────────────
@@ -1351,7 +1507,10 @@ import WizardLayout from '../layouts/WizardLayout.astro';
     if (barEl) barEl.style.width = '100%';
     if (countEl) countEl.textContent = `${capturedPages.length}/${total}`;
     if (statusEl) statusEl.textContent = capturedPages.length === total ? 'Pronto!' : `Concluído com erros (${capturedPages.length}/${total})`;
-    if (capturedPages.length > 0) resultEl?.classList.remove('hidden');
+    if (capturedPages.length > 0) {
+      resultEl?.classList.remove('hidden');
+      setTimeout(() => showSpotlight(document.getElementById('go-prompts-btn'), 'Captura concluída! Clique aqui para gerar os prompts', 'step1-done'), 400);
+    }
     btn.disabled = false;
   });
 
@@ -1375,6 +1534,20 @@ import WizardLayout from '../layouts/WizardLayout.astro';
     const fullBatch = buildFullBatch(pagePrompts, slug);
     window.__fullBatch = fullBatch;
 
+    // Auto-save prompts into the site's own folder
+    try {
+      const saveRes = await fetch(`${apiUrl}/api/save-prompts`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ content: fullBatch, slug, pages: capturedPages.map(p => p.slug) }),
+      });
+      if (!saveRes.ok) {
+        const errData = await saveRes.json().catch(() => ({}));
+        showToast('error', `Erro ao salvar prompts.md: ${errData.error || saveRes.status}. Servidor f8 rodando?`);
+      }
+    } catch (_) {
+      showToast('error', 'Não foi possível salvar prompts.md. Certifique-se que o servidor f8 está rodando (bun run dev).');
+    }
+
     const promptsList = document.getElementById('prompts-list');
     if (promptsList) {
       promptsList.innerHTML = capturedPages.map((p, i) => `
@@ -1391,28 +1564,11 @@ import WizardLayout from '../layouts/WizardLayout.astro';
   });
 
   document.getElementById('copy-initial-btn')?.addEventListener('click', () => {
-    navigator.clipboard.writeText('rode os @f8/prompts-gerados.md na sequencia').then(() => {
+    const cmd = window.__cursorCmd || document.getElementById('cursor-command')?.textContent || 'rode os @f8/prompts-gerados.md na sequencia';
+    navigator.clipboard.writeText(cmd).then(() => {
       const b = document.getElementById('copy-initial-btn');
-      if (b) { b.textContent = '✓ Copiado — Cole no Cursor'; setTimeout(() => { b.textContent = 'Copiar prompt inicial'; }, 2500); }
+      if (b) { b.textContent = '✓ Copiado!'; setTimeout(() => { b.textContent = 'Copiar'; }, 2500); }
     });
-  });
-
-  document.getElementById('save-prompts-btn')?.addEventListener('click', async () => {
-    const batch = window.__fullBatch;
-    if (!batch) return;
-    const btn = document.getElementById('save-prompts-btn');
-    if (btn) { btn.disabled = true; btn.textContent = 'Salvando...'; }
-    try {
-      const res = await fetch(`${apiUrl}/api/save-prompts`, {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content: batch }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Erro');
-      if (btn) { btn.textContent = '✓ Salvo em prompts-gerados.md'; setTimeout(() => { btn.textContent = 'Salvar prompts'; btn.disabled = false; }, 2500); }
-    } catch {
-      if (btn) { btn.textContent = '✖ Erro ao salvar'; setTimeout(() => { btn.textContent = 'Salvar prompts'; btn.disabled = false; }, 2000); }
-    }
   });
 
   // ─── Prompt builders ──────────────────────────────────────────────────────
@@ -1436,7 +1592,30 @@ import WizardLayout from '../layouts/WizardLayout.astro';
       ? `\nIMAGENS: Use public/reference/${page.slug}/images/ (images.json). No Astro: src="/reference/${page.slug}/images/img-XXX.ext"`
       : '\nIMAGENS: Use placeholders (picsum.photos, Unsplash) onde necessário.';
     const base = buildBasePrompt(opts, briefingText);
-    return `Com base em public/reference/${page.slug}/, crie a página em sites/${projectSlug}/src/pages/.\n\nINSTRUÇÕES: ${base || '(Siga o briefing.)'}\n\nESTA PÁGINA: ${pageDesc || 'Seguir a referência.'}\n\nUse page.html e styles.css como base.${imagesNote}\n\nAstro + Tailwind. HTML semântico e responsivo.`;
+
+    let contentBlock = '';
+    const cd = page.contentData;
+    if (cd) {
+      const parts = [];
+      if (cd.colors) parts.push(`CORES: fundo=${cd.colors.bg.join(', ')} | texto=${cd.colors.text.join(', ')} | destaque=${cd.colors.accent.join(', ')}`);
+      if (cd.fonts?.length) parts.push(`FONTES: ${cd.fonts.join(', ')}`);
+      if (cd.nav?.length) parts.push(`NAVEGAÇÃO: ${cd.nav.join(' | ')}`);
+      if (cd.sections?.length) {
+        const s = cd.sections.map(sec => {
+          let d = sec.tag;
+          if (sec.heading) d += ` "${sec.heading}"`;
+          if (sec.layout && sec.layout !== 'block') d += ` [${sec.layout}${sec.columns ? ` ${sec.columns}col` : ''}]`;
+          return d;
+        }).join(' → ');
+        parts.push(`ESTRUTURA: ${s}`);
+      }
+      if (cd.buttons?.length) parts.push(`BOTÕES/CTAs: ${cd.buttons.join(', ')}`);
+      if (cd.headings?.length) parts.push(`HEADINGS: ${cd.headings.map(h => `${h.tag}: ${h.text}`).join(' | ')}`);
+      if (cd.keyText?.length) parts.push(`TEXTO PRINCIPAL: ${cd.keyText.join(' ')}`);
+      contentBlock = '\n\nCONTEÚDO DA REFERÊNCIA:\n' + parts.join('\n');
+    }
+
+    return `Com base em public/reference/${page.slug}/, crie a página em sites/${projectSlug}/src/pages/.\n\nINSTRUÇÕES: ${base || '(Siga o briefing.)'}\n\nESTA PÁGINA: ${pageDesc || 'Seguir a referência.'}${contentBlock}\n\nUse page.html e styles.css como base.${imagesNote}\n\nAstro + Tailwind. HTML semântico e responsivo.`;
   }
 
   const EXTRA_PROMPTS = {
@@ -1584,22 +1763,21 @@ Execute em ordem no Cursor. Aguarde cada etapa antes da próxima.
     const btn = document.getElementById('fb-submit');
     const errorEl = document.getElementById('fb-error');
     const successEl = document.getElementById('fb-success');
-    const tipo = (document.getElementById('fb-tipo') as HTMLSelectElement)?.value;
-    const descricao = (document.getElementById('fb-descricao') as HTMLTextAreaElement)?.value;
-    const nome = (document.getElementById('fb-nome') as HTMLInputElement)?.value;
-    const email = (document.getElementById('fb-email') as HTMLInputElement)?.value;
+    const tipo = document.getElementById('fb-tipo')?.value;
+    const descricao = document.getElementById('fb-descricao')?.value;
+    const nome = document.getElementById('fb-nome')?.value;
+    const email = document.getElementById('fb-email')?.value;
 
     errorEl?.classList.add('hidden');
     successEl?.classList.add('hidden');
 
-    if (!tipo || !descricao.trim()) {
-      errorEl!.textContent = 'Preencha o tipo e a descrição antes de enviar.';
+    if (!tipo || !descricao?.trim()) {
+      if (errorEl) errorEl.textContent = 'Preencha o tipo e a descrição antes de enviar.';
       errorEl?.classList.remove('hidden');
       return;
     }
 
-    btn!.textContent = 'Enviando...';
-    btn!.setAttribute('disabled', '');
+    if (btn) { btn.textContent = 'Enviando...'; btn.setAttribute('disabled', ''); }
 
     try {
       const res = await fetch('http://localhost:3001/api/feedback', {
@@ -1610,21 +1788,158 @@ Execute em ordem no Cursor. Aguarde cada etapa antes da próxima.
       const data = await res.json();
       if (data.success) {
         successEl?.classList.remove('hidden');
-        (document.getElementById('feedback-form') as HTMLFormElement)?.reset();
+        document.getElementById('feedback-form')?.reset();
       } else {
-        errorEl!.textContent = data.error || 'Erro ao enviar. Tente novamente.';
+        if (errorEl) errorEl.textContent = data.error || 'Erro ao enviar. Tente novamente.';
         errorEl?.classList.remove('hidden');
       }
     } catch {
-      errorEl!.textContent = 'Não foi possível conectar. Verifique se o f8 está rodando.';
+      if (errorEl) errorEl.textContent = 'Não foi possível conectar. Verifique se o f8 está rodando.';
       errorEl?.classList.remove('hidden');
     } finally {
-      btn!.textContent = 'Enviar feedback';
-      btn!.removeAttribute('disabled');
+      if (btn) { btn.textContent = 'Enviar feedback'; btn.removeAttribute('disabled'); }
+    }
+  });
+
+  // ─── Update system ────────────────────────────────────────────────────────
+
+  let _updateData = null;
+
+  async function checkForUpdates() {
+    try {
+      const res = await fetch(`${apiUrl}/api/update/check`);
+      if (!res.ok) return;
+      const data = await res.json();
+      _updateData = data;
+      const badge = document.getElementById('update-badge-btn');
+      if (badge) badge.classList.toggle('hidden', !data.available);
+    } catch (_) {}
+  }
+
+  document.getElementById('update-badge-btn')?.addEventListener('click', () => {
+    openUpdateModal();
+  });
+
+  function openUpdateModal() {
+    const modal = document.getElementById('update-modal');
+    if (!modal) return;
+    modal.classList.remove('hidden');
+    const data = _updateData;
+    const versionEl = document.getElementById('update-version-label');
+    const changelogBox = document.getElementById('update-changelog-box');
+    if (versionEl && data) {
+      versionEl.textContent = data.localVersion
+        ? `Versão atual: v${data.localVersion} · commit ${data.local || '?'} → ${data.remote || '?'}`
+        : `${data.local || '?'} → ${data.remote || '?'}`;
+    }
+    if (changelogBox && data?.changelog?.length) {
+      changelogBox.innerHTML = data.changelog.map(line => {
+        const [hash, ...rest] = line.split(' ');
+        return `<div class="text-xs py-0.5" style="color:rgba(255,255,255,.6)"><span style="color:rgba(255,255,255,.3);font-family:monospace">${hash}</span> ${rest.join(' ')}</div>`;
+      }).join('');
+    } else if (changelogBox) {
+      changelogBox.innerHTML = '<p class="text-xs" style="color:rgba(255,255,255,.3)">Nenhuma informação de changelog disponível.</p>';
+    }
+    const statusEl = document.getElementById('update-apply-status');
+    const applyBtn = document.getElementById('update-apply-btn');
+    if (statusEl) statusEl.classList.add('hidden');
+    if (applyBtn) { applyBtn.disabled = false; applyBtn.textContent = 'Aplicar atualização'; }
+  }
+
+  document.getElementById('update-modal-close')?.addEventListener('click', () => {
+    document.getElementById('update-modal')?.classList.add('hidden');
+  });
+
+  document.getElementById('update-modal')?.addEventListener('click', (e) => {
+    if (e.target === e.currentTarget) e.currentTarget.classList.add('hidden');
+  });
+
+  document.getElementById('update-apply-btn')?.addEventListener('click', async () => {
+    const btn = document.getElementById('update-apply-btn');
+    const statusEl = document.getElementById('update-apply-status');
+    if (btn) { btn.disabled = true; btn.textContent = 'Aplicando...'; }
+    if (statusEl) { statusEl.textContent = 'Baixando e aplicando... aguarde.'; statusEl.classList.remove('hidden'); }
+    try {
+      const res = await fetch(`${apiUrl}/api/update/apply`, { method: 'POST' });
+      const data = await res.json();
+      if (data.success) {
+        if (statusEl) statusEl.textContent = '✓ Atualização aplicada! Reinicie o servidor (feche e abra o terminal) para usar a nova versão.';
+        if (btn) btn.textContent = '✓ Concluído';
+        const badge = document.getElementById('update-badge-btn');
+        if (badge) badge.classList.add('hidden');
+        _updateData = null;
+      } else {
+        if (statusEl) statusEl.textContent = `Erro: ${data.error || 'Falha ao aplicar. Tente manualmente.'}`;
+        if (btn) { btn.disabled = false; btn.textContent = 'Tentar novamente'; }
+      }
+    } catch (e) {
+      if (statusEl) statusEl.textContent = 'Servidor indisponível. Certifique-se que o f8 está rodando.';
+      if (btn) { btn.disabled = false; btn.textContent = 'Tentar novamente'; }
+    }
+  });
+
+  // ─── Reference cleanup ────────────────────────────────────────────────────
+
+  async function loadOrphans() {
+    const statusEl = document.getElementById('orphans-status');
+    const listEl = document.getElementById('orphans-list');
+    const btn = document.getElementById('cleanup-refs-btn');
+    try {
+      const res = await fetch(`${apiUrl}/api/references/orphans`);
+      if (!res.ok) throw new Error('Erro');
+      const data = await res.json();
+      const count = data.orphans?.length || 0;
+      if (statusEl) {
+        statusEl.innerHTML = count > 0
+          ? `<span class="text-xs" style="color:#f87171">${count} referência(s) não usada(s) encontrada(s)</span>`
+          : `<span class="text-xs" style="color:rgba(255,255,255,.35)">✓ Tudo limpo — ${data.usedCount || 0} referência(s) em uso</span>`;
+      }
+      if (count > 0 && listEl) {
+        listEl.innerHTML = data.orphans.map(s =>
+          `<div class="text-xs font-mono py-0.5" style="color:rgba(255,255,255,.4)">${s}</div>`
+        ).join('');
+        listEl.classList.remove('hidden');
+        if (btn) btn.classList.remove('hidden');
+      } else {
+        listEl?.classList.add('hidden');
+        if (btn) btn.classList.add('hidden');
+      }
+    } catch (_) {
+      if (statusEl) statusEl.innerHTML = '<span class="text-xs" style="color:rgba(255,255,255,.3)">Servidor indisponível</span>';
+    }
+  }
+
+  document.getElementById('cleanup-refs-btn')?.addEventListener('click', async () => {
+    const btn = document.getElementById('cleanup-refs-btn');
+    if (!confirm('Remover todas as referências não associadas a projetos ativos?')) return;
+    if (btn) { btn.disabled = true; btn.textContent = 'Removendo...'; }
+    try {
+      const res = await fetch(`${apiUrl}/api/references/cleanup`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}' });
+      const data = await res.json();
+      if (data.success) {
+        showToast('success', `${data.count} referência(s) removida(s)`);
+        loadOrphans();
+      } else {
+        showToast('error', data.error || 'Erro ao remover');
+        if (btn) { btn.disabled = false; btn.textContent = 'Remover referências não usadas'; }
+      }
+    } catch (_) {
+      showToast('error', 'Servidor indisponível');
+      if (btn) { btn.disabled = false; btn.textContent = 'Remover referências não usadas'; }
     }
   });
 
   // ─── Init ─────────────────────────────────────────────────────────────────
+
+  async function loadVersion() {
+    try {
+      const res = await fetch(`${apiUrl}/api/version`);
+      if (!res.ok) return;
+      const { version, hash } = await res.json();
+      const el = document.getElementById('app-version-label');
+      if (el && version) el.textContent = `f8 v${version}${hash ? ` (${hash})` : ''}`;
+    } catch (_) {}
+  }
 
   async function init() {
     checkApiStatus();
@@ -1633,6 +1948,12 @@ Execute em ordem no Cursor. Aguarde cada etapa antes da próxima.
     await loadSites();
     await checkTokenStatus();
     updateDashboard();
+    loadVersion();
+
+    // Check for updates in background (after 3s to not block startup)
+    setTimeout(checkForUpdates, 3000);
+    // Recheck every 30 minutes
+    setInterval(checkForUpdates, 30 * 60 * 1000);
 
     // Show onboarding for new users
     if (!localStorage.getItem(ONBOARDED_KEY)) {
@@ -1646,6 +1967,12 @@ Execute em ordem no Cursor. Aguarde cada etapa antes da próxima.
 </script>
 
 <style>
+  @keyframes sp-pulse {
+    0%, 100% { opacity: .45; transform: scale(1); }
+    50%       { opacity: 1;   transform: scale(1.04); }
+  }
+  #sp-ring { animation: sp-pulse 1.8s ease-in-out infinite; transform-origin: center; }
+
   .nav-item {
     color: rgba(255, 255, 255, .45);
     font-family: var(--hub-font-body);

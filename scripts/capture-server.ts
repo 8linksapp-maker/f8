@@ -190,6 +190,144 @@ interface PageResult {
   slug: string;
   url: string;
   files: string[];
+  contentData?: ContentData;
+}
+
+interface ContentData {
+  colors: { bg: string[]; text: string[]; accent: string[] };
+  fonts: string[];
+  sections: { tag: string; heading?: string; layout?: string; columns?: number }[];
+  nav: string[];
+  buttons: string[];
+  headings: { tag: string; text: string }[];
+  keyText: string[];
+}
+
+async function extractContentData(page: Awaited<ReturnType<Awaited<ReturnType<typeof puppeteer.launch>>['newPage']>>): Promise<ContentData> {
+  return page.evaluate(() => {
+    function rgbToHex(rgb: string): string | null {
+      const m = rgb.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+      if (!m) return null;
+      const r = parseInt(m[1]), g = parseInt(m[2]), b = parseInt(m[3]);
+      if (r === 0 && g === 0 && b === 0 && rgb.includes('rgba') && rgb.includes('0)')) return null;
+      return '#' + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('');
+    }
+
+    function isTransparent(v: string): boolean {
+      return !v || v === 'transparent' || v === 'rgba(0, 0, 0, 0)' || v === 'rgba(0,0,0,0)';
+    }
+
+    // Cores
+    const bgCount: Record<string, number> = {};
+    const textCount: Record<string, number> = {};
+    const accentCount: Record<string, number> = {};
+
+    const bodyEls = Array.from(document.querySelectorAll('body, header, main, section, footer, div')).slice(0, 200);
+    for (const el of bodyEls) {
+      const cs = getComputedStyle(el as Element);
+      const bg = cs.backgroundColor;
+      const fg = cs.color;
+      if (!isTransparent(bg)) {
+        const hex = rgbToHex(bg);
+        if (hex) bgCount[hex] = (bgCount[hex] || 0) + 1;
+      }
+      if (fg) {
+        const hex = rgbToHex(fg);
+        if (hex) textCount[hex] = (textCount[hex] || 0) + 1;
+      }
+    }
+    for (const el of document.querySelectorAll('a, button')) {
+      const cs = getComputedStyle(el as Element);
+      const fg = cs.color;
+      if (fg) {
+        const hex = rgbToHex(fg);
+        if (hex) accentCount[hex] = (accentCount[hex] || 0) + 1;
+      }
+    }
+
+    const topN = (obj: Record<string, number>, n: number) =>
+      Object.entries(obj).sort((a, b) => b[1] - a[1]).slice(0, n).map(([k]) => k);
+
+    const colors = {
+      bg: topN(bgCount, 5),
+      text: topN(textCount, 3),
+      accent: topN(accentCount, 3),
+    };
+
+    // Fontes
+    const genericFonts = new Set(['sans-serif', 'serif', 'monospace', 'cursive', 'fantasy', 'system-ui']);
+    const fontSet = new Set<string>();
+    for (const sel of ['body', 'h1', 'h2', 'p', 'button']) {
+      const el = document.querySelector(sel);
+      if (el) {
+        const ff = getComputedStyle(el).fontFamily.split(',')[0].trim().replace(/['"]/g, '');
+        if (ff && !genericFonts.has(ff.toLowerCase())) fontSet.add(ff);
+      }
+    }
+    const fonts = Array.from(fontSet).slice(0, 5);
+
+    // Seções
+    const sectionEls = Array.from(document.querySelectorAll('header, nav, main, section, footer, [role="banner"], [role="main"]')).slice(0, 15);
+    const sections = sectionEls.map(el => {
+      const tag = el.tagName.toLowerCase();
+      const headingEl = el.querySelector('h1, h2, h3');
+      const heading = headingEl ? (headingEl.textContent || '').trim().slice(0, 60) : undefined;
+      const cs = getComputedStyle(el as HTMLElement);
+      const display = cs.display;
+      let layout: string | undefined;
+      let columns: number | undefined;
+      if (display === 'grid') {
+        layout = 'grid';
+        const gtc = cs.gridTemplateColumns;
+        if (gtc && gtc !== 'none') {
+          columns = gtc.trim().split(/\s+/).filter(Boolean).length;
+        }
+      } else if (display === 'flex') {
+        layout = 'flex';
+      }
+      const result: { tag: string; heading?: string; layout?: string; columns?: number } = { tag };
+      if (heading) result.heading = heading;
+      if (layout) result.layout = layout;
+      if (columns) result.columns = columns;
+      return result;
+    });
+
+    // Nav
+    const navLinks = Array.from(document.querySelectorAll('nav a, header a'))
+      .map(a => (a.textContent || '').trim())
+      .filter(t => t.length > 0 && t.length < 50)
+      .slice(0, 12);
+    const nav = [...new Set(navLinks)];
+
+    // Botões
+    const btnEls = Array.from(document.querySelectorAll('button, a[class*="btn"], [role="button"], input[type="submit"]'));
+    const buttons = btnEls
+      .map(b => ((b as HTMLInputElement).value || b.textContent || '').trim())
+      .filter(t => t.length > 0 && t.length < 60)
+      .slice(0, 10);
+
+    // Headings
+    const headings = Array.from(document.querySelectorAll('h1, h2, h3')).map(h => ({
+      tag: h.tagName.toLowerCase(),
+      text: (h.textContent || '').trim().slice(0, 80),
+    }));
+
+    // Texto-chave
+    const keyText: string[] = [];
+    let totalChars = 0;
+    for (const p of document.querySelectorAll('p')) {
+      const cs = getComputedStyle(p as HTMLElement);
+      if (cs.display === 'none' || cs.visibility === 'hidden') continue;
+      const t = (p.textContent || '').trim();
+      if (t.length > 20) {
+        keyText.push(t.slice(0, 200));
+        totalChars += t.length;
+        if (totalChars >= 500) break;
+      }
+    }
+
+    return { colors, fonts, sections, nav, buttons, headings, keyText };
+  }) as Promise<ContentData>;
 }
 
 async function capturePage(
@@ -312,22 +450,17 @@ async function capturePage(
   writeFileSync(join(pageDir, 'styles.css'), allCss || '/* No CSS */', 'utf-8');
   savedFiles.push(`${slug}/styles.css`);
 
-  const structure = await page.evaluate(() => {
-    const headings = Array.from(document.querySelectorAll('h1, h2, h3')).map((h) => ({
-      tag: h.tagName.toLowerCase(),
-      text: (h.textContent || '').trim().slice(0, 80),
-    }));
-    return { headings };
-  });
-  writeFileSync(
-    join(pageDir, 'structure.json'),
-    JSON.stringify(structure, null, 2),
-    'utf-8'
-  );
+  const contentData = await extractContentData(page);
+  writeFileSync(join(pageDir, 'content-data.json'), JSON.stringify(contentData, null, 2), 'utf-8');
+  savedFiles.push(`${slug}/content-data.json`);
+
+  // Manter structure.json por compatibilidade, derivado de contentData
+  const structure = { headings: contentData.headings };
+  writeFileSync(join(pageDir, 'structure.json'), JSON.stringify(structure, null, 2), 'utf-8');
   savedFiles.push(`${slug}/structure.json`);
 
   await page.close();
-  return { slug, url, files: savedFiles };
+  return { slug, url, files: savedFiles, contentData };
 }
 
 function inferBaseUrlFromSlug(slug: string): string {
@@ -399,6 +532,20 @@ try {
 
       if ((pathname === '/' || pathname === '/health') && req.method === 'GET') {
         return new Response(JSON.stringify({ ok: true, port: PORT }), { headers: { 'Content-Type': 'application/json', ...CORS } });
+      }
+
+      if (pathname === '/api/version' && req.method === 'GET') {
+        const projectRoot = join(__dirname, '..');
+        let version = '?';
+        try {
+          const vf = join(projectRoot, 'VERSION');
+          if (existsSync(vf)) version = readFileSync(vf, 'utf-8').trim();
+        } catch (_) {}
+        const commit = spawnSync('git', ['rev-parse', '--short', 'HEAD'], { cwd: projectRoot, encoding: 'utf-8' });
+        const hash = commit.stdout?.trim() || '';
+        return new Response(JSON.stringify({ version, hash }), {
+          headers: { 'Content-Type': 'application/json', ...CORS },
+        });
       }
 
       if (pathname === '/api/credentials' && req.method === 'GET') {
@@ -883,8 +1030,9 @@ try {
 
       if (pathname === '/api/save-prompts' && req.method === 'POST') {
         try {
-          const body = (await req.json()) as { content?: string };
+          const body = (await req.json()) as { content?: string; slug?: string };
           const content = body?.content;
+          const slug = typeof body?.slug === 'string' ? body.slug.replace(/[^a-z0-9-]/g, '') : '';
           if (typeof content !== 'string') {
             return new Response(
               JSON.stringify({ error: 'Informe content (string)' }),
@@ -892,11 +1040,30 @@ try {
             );
           }
           const projectRoot = join(__dirname, '..');
-          const filePath = join(projectRoot, 'prompts-gerados.md');
+          const relPath = slug
+            ? join('sites', slug, 'prompts.md')
+            : 'prompts-gerados.md';
+          const filePath = join(projectRoot, relPath);
+          // Ensure directory exists before writing
+          const fileDir = join(projectRoot, slug ? join('sites', slug) : '.');
+          if (!existsSync(fileDir)) mkdirSync(fileDir, { recursive: true });
           writeFileSync(filePath, content, 'utf-8');
-          console.log(`  \x1b[32m✓\x1b[0m prompts-gerados.md salvo`);
+
+          // Save page slugs into project.json if pages array provided
+          const pages = Array.isArray((body as { pages?: string[] }).pages) ? (body as { pages?: string[] }).pages! : null;
+          if (slug && pages) {
+            const projectPath = join(projectRoot, 'sites', slug, 'project.json');
+            if (existsSync(projectPath)) {
+              try {
+                const meta = JSON.parse(readFileSync(projectPath, 'utf-8'));
+                meta.referencePages = pages;
+                writeFileSync(projectPath, JSON.stringify(meta, null, 2), 'utf-8');
+              } catch (_) {}
+            }
+          }
+          console.log(`  \x1b[32m✓\x1b[0m ${relPath} salvo`);
           return new Response(
-            JSON.stringify({ success: true, path: 'prompts-gerados.md' }),
+            JSON.stringify({ success: true, path: relPath }),
             { headers: { 'Content-Type': 'application/json', ...CORS } }
           );
         } catch (e) {
@@ -930,6 +1097,231 @@ try {
             JSON.stringify({ ok: false, error: (e as Error).message, broken: [] }),
             { status: 500, headers: { 'Content-Type': 'application/json', ...CORS } }
           );
+        }
+      }
+
+      const pagesMatch = pathname.match(/^\/api\/sites\/([^/]+)\/pages$/);
+      if (pagesMatch && req.method === 'GET') {
+        const slug = pagesMatch[1];
+        if (!slug || slug.includes('..')) {
+          return new Response(JSON.stringify({ error: 'slug inválido' }), { status: 400, headers: { 'Content-Type': 'application/json', ...CORS } });
+        }
+        const projectRoot = join(__dirname, '..');
+        const projectPath = join(projectRoot, 'sites', slug, 'project.json');
+        if (!existsSync(projectPath)) {
+          return new Response(JSON.stringify({ pages: [] }), { headers: { 'Content-Type': 'application/json', ...CORS } });
+        }
+        try {
+          const meta = JSON.parse(readFileSync(projectPath, 'utf-8'));
+          const referenceSlugs: string[] = meta.referencePages || [];
+          const pages = referenceSlugs.map((pageSlug: string) => {
+            const pageDir = join(REFERENCE_BASE, pageSlug);
+            const files: string[] = [];
+            if (existsSync(pageDir)) {
+              try {
+                const entries = readdirSync(pageDir, { withFileTypes: true });
+                for (const e of entries) {
+                  if (!e.isDirectory()) files.push(`${pageSlug}/${e.name}`);
+                  else {
+                    const sub = readdirSync(join(pageDir, e.name));
+                    for (const f of sub) files.push(`${pageSlug}/${e.name}/${f}`);
+                  }
+                }
+              } catch (_) {}
+            }
+            let contentData: ContentData | undefined;
+            const cdPath = join(pageDir, 'content-data.json');
+            if (existsSync(cdPath)) {
+              try { contentData = JSON.parse(readFileSync(cdPath, 'utf-8')); } catch (_) {}
+            }
+            return { slug: pageSlug, url: '', files, contentData };
+          }).filter(p => p.files.length > 0);
+          return new Response(JSON.stringify({ pages }), { headers: { 'Content-Type': 'application/json', ...CORS } });
+        } catch (e) {
+          return new Response(JSON.stringify({ pages: [], error: (e as Error).message }), { headers: { 'Content-Type': 'application/json', ...CORS } });
+        }
+      }
+
+      // ─── Reference cleanup ──────────────────────────────────────────────
+      if (pathname === '/api/references/orphans' && req.method === 'GET') {
+        try {
+          const projectRoot = join(__dirname, '..');
+          const sitesDir = join(projectRoot, 'sites');
+          // Collect all used slugs from project.json files
+          const usedSlugs = new Set<string>();
+          if (existsSync(sitesDir)) {
+            for (const e of readdirSync(sitesDir, { withFileTypes: true })) {
+              if (!e.isDirectory()) continue;
+              const pjPath = join(sitesDir, e.name, 'project.json');
+              if (!existsSync(pjPath)) continue;
+              try {
+                const meta = JSON.parse(readFileSync(pjPath, 'utf-8'));
+                const pages: string[] = meta.referencePages || [];
+                pages.forEach(s => usedSlugs.add(s));
+              } catch (_) {}
+            }
+          }
+          // List all reference folders
+          const orphans: string[] = [];
+          if (existsSync(REFERENCE_BASE)) {
+            for (const e of readdirSync(REFERENCE_BASE, { withFileTypes: true })) {
+              if (e.isDirectory() && !usedSlugs.has(e.name)) orphans.push(e.name);
+            }
+          }
+          return new Response(JSON.stringify({ orphans, usedCount: usedSlugs.size }), {
+            headers: { 'Content-Type': 'application/json', ...CORS },
+          });
+        } catch (e) {
+          return new Response(JSON.stringify({ orphans: [], error: (e as Error).message }), {
+            headers: { 'Content-Type': 'application/json', ...CORS },
+          });
+        }
+      }
+
+      if (pathname === '/api/references/cleanup' && req.method === 'POST') {
+        try {
+          const projectRoot = join(__dirname, '..');
+          const sitesDir = join(projectRoot, 'sites');
+          const body = (await req.json()) as { slugs?: string[] };
+          let toDelete: string[] = [];
+          if (Array.isArray(body?.slugs) && body.slugs.length > 0) {
+            // Delete only the specified slugs
+            toDelete = body.slugs.map(s => String(s).replace(/\.\./g, '').trim()).filter(Boolean);
+          } else {
+            // Delete all orphans
+            const usedSlugs = new Set<string>();
+            if (existsSync(sitesDir)) {
+              for (const e of readdirSync(sitesDir, { withFileTypes: true })) {
+                if (!e.isDirectory()) continue;
+                const pjPath = join(sitesDir, e.name, 'project.json');
+                if (!existsSync(pjPath)) continue;
+                try {
+                  const meta = JSON.parse(readFileSync(pjPath, 'utf-8'));
+                  const pages: string[] = meta.referencePages || [];
+                  pages.forEach(s => usedSlugs.add(s));
+                } catch (_) {}
+              }
+            }
+            if (existsSync(REFERENCE_BASE)) {
+              for (const e of readdirSync(REFERENCE_BASE, { withFileTypes: true })) {
+                if (e.isDirectory() && !usedSlugs.has(e.name)) toDelete.push(e.name);
+              }
+            }
+          }
+          const deleted: string[] = [];
+          for (const slug of toDelete) {
+            const dir = join(REFERENCE_BASE, slug);
+            if (existsSync(dir)) {
+              rmDirRecursive(dir);
+              deleted.push(slug);
+              console.log(`  \x1b[32m✓\x1b[0m Referência removida: ${slug}`);
+            }
+          }
+          return new Response(JSON.stringify({ success: true, deleted, count: deleted.length }), {
+            headers: { 'Content-Type': 'application/json', ...CORS },
+          });
+        } catch (e) {
+          console.error('\x1b[31m✖ Erro cleanup:\x1b[0m', e);
+          return new Response(JSON.stringify({ success: false, error: (e as Error).message }), {
+            status: 500, headers: { 'Content-Type': 'application/json', ...CORS },
+          });
+        }
+      }
+
+      // ─── Update system ──────────────────────────────────────────────────
+      if (pathname === '/api/update/check' && req.method === 'GET') {
+        try {
+          const projectRoot = join(__dirname, '..');
+          // Fetch from maker remote
+          const fetch = spawnSync('git', ['fetch', 'maker', '--no-tags', '-q'], {
+            cwd: projectRoot, encoding: 'utf-8', timeout: 15000,
+          });
+          if (fetch.status !== 0) {
+            return new Response(JSON.stringify({ available: false, error: fetch.stderr?.trim() || 'Erro ao buscar atualizações' }), {
+              headers: { 'Content-Type': 'application/json', ...CORS },
+            });
+          }
+          const localRev = spawnSync('git', ['rev-parse', 'HEAD'], { cwd: projectRoot, encoding: 'utf-8' });
+          const remoteRev = spawnSync('git', ['rev-parse', 'maker/main'], { cwd: projectRoot, encoding: 'utf-8' });
+          const local = localRev.stdout?.trim();
+          const remote = remoteRev.stdout?.trim();
+          if (!remote) {
+            return new Response(JSON.stringify({ available: false, error: 'Branch maker/main não encontrado' }), {
+              headers: { 'Content-Type': 'application/json', ...CORS },
+            });
+          }
+          const available = local !== remote;
+          let changelog: string[] = [];
+          if (available) {
+            const log = spawnSync('git', ['log', `${local}..${remote}`, '--oneline', '--no-merges'], {
+              cwd: projectRoot, encoding: 'utf-8',
+            });
+            changelog = (log.stdout || '').trim().split('\n').filter(Boolean).slice(0, 20);
+          }
+          // Read local version from VERSION file
+          let localVersion = '?';
+          const vf = join(projectRoot, 'VERSION');
+          if (existsSync(vf)) {
+            try { localVersion = readFileSync(vf, 'utf-8').trim(); } catch (_) {}
+          }
+          return new Response(JSON.stringify({ available, localVersion, local: local?.slice(0, 7), remote: remote?.slice(0, 7), changelog }), {
+            headers: { 'Content-Type': 'application/json', ...CORS },
+          });
+        } catch (e) {
+          return new Response(JSON.stringify({ available: false, error: (e as Error).message }), {
+            headers: { 'Content-Type': 'application/json', ...CORS },
+          });
+        }
+      }
+
+      if (pathname === '/api/update/apply' && req.method === 'POST') {
+        try {
+          const projectRoot = join(__dirname, '..');
+          const results: { step: string; ok: boolean; out?: string }[] = [];
+
+          // 1. Stash any local changes
+          const stash = spawnSync('git', ['stash', '--include-untracked', '-m', 'f8-auto-update-stash'], {
+            cwd: projectRoot, encoding: 'utf-8', timeout: 15000,
+          });
+          const stashed = !(stash.stdout || '').includes('No local changes to save');
+          results.push({ step: 'stash', ok: stash.status === 0, out: stash.stdout?.trim() });
+
+          // 2. Merge from maker/main
+          const merge = spawnSync('git', ['merge', 'maker/main', '--no-edit', '--strategy-option=theirs'], {
+            cwd: projectRoot, encoding: 'utf-8', timeout: 30000,
+          });
+          results.push({ step: 'merge', ok: merge.status === 0, out: (merge.stdout || merge.stderr || '').trim() });
+
+          if (merge.status !== 0) {
+            // Abort merge on failure
+            spawnSync('git', ['merge', '--abort'], { cwd: projectRoot });
+            if (stashed) spawnSync('git', ['stash', 'pop'], { cwd: projectRoot, encoding: 'utf-8' });
+            return new Response(JSON.stringify({ success: false, results, error: 'Conflito ao aplicar atualização. Contate o suporte.' }), {
+              status: 500, headers: { 'Content-Type': 'application/json', ...CORS },
+            });
+          }
+
+          // 3. Restore stash
+          if (stashed) {
+            const pop = spawnSync('git', ['stash', 'pop'], { cwd: projectRoot, encoding: 'utf-8', timeout: 10000 });
+            results.push({ step: 'stash-pop', ok: pop.status === 0, out: pop.stdout?.trim() });
+          }
+
+          // 4. Install new deps if package.json changed
+          const install = spawnSync('bun', ['install', '--frozen-lockfile'], {
+            cwd: projectRoot, encoding: 'utf-8', timeout: 60000,
+          });
+          results.push({ step: 'bun-install', ok: install.status === 0 });
+
+          console.log('\x1b[32m✓\x1b[0m Atualização aplicada com sucesso');
+          return new Response(JSON.stringify({ success: true, results }), {
+            headers: { 'Content-Type': 'application/json', ...CORS },
+          });
+        } catch (e) {
+          console.error('\x1b[31m✖ Erro ao aplicar update:\x1b[0m', e);
+          return new Response(JSON.stringify({ success: false, error: (e as Error).message }), {
+            status: 500, headers: { 'Content-Type': 'application/json', ...CORS },
+          });
         }
       }
 
