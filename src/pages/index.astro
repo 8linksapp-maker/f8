@@ -186,6 +186,19 @@ import WizardLayout from '../layouts/WizardLayout.astro';
             </a>
           </div>
 
+          <!-- Update banner -->
+          <button id="update-banner" class="hidden w-full mb-4 p-4 rounded-xl flex items-center justify-between gap-4 text-left transition-opacity hover:opacity-90"
+            style="background: rgba(234,179,8,.1); border: 1px solid rgba(234,179,8,.4)">
+            <div class="flex items-center gap-3">
+              <span class="text-xl shrink-0">⚠️</span>
+              <div>
+                <p class="text-sm font-semibold" style="color: #fde047">Atualização disponível</p>
+                <p class="text-xs mt-0.5" style="color: rgba(253,224,71,.65)" id="update-banner-sub">Nova versão do f8 disponível. Clique para atualizar.</p>
+              </div>
+            </div>
+            <span class="text-xs font-semibold px-3 py-1.5 rounded-lg shrink-0" style="background: rgba(234,179,8,.2); color: #fde047">Atualizar →</span>
+          </button>
+
           <!-- No-token banner -->
           <div id="no-token-banner" class="hidden mb-6 p-4 rounded-xl flex items-center justify-between gap-4"
             style="background: rgba(245,158,11,.08); border: 1px solid rgba(245,158,11,.25)">
@@ -1821,15 +1834,19 @@ Execute em ordem no Cursor. Aguarde cada etapa antes da próxima.
       if (!res.ok) return;
       const data = await res.json();
       _updateData = data;
-      const badge = document.getElementById('update-badge-btn');
-      if (badge) badge.classList.toggle('hidden', !data.available);
-      const alert = document.getElementById('update-alert-nav');
-      if (alert) alert.classList.toggle('hidden', !data.available);
+      document.getElementById('update-badge-btn')?.classList.toggle('hidden', !data.available);
+      document.getElementById('update-alert-nav')?.classList.toggle('hidden', !data.available);
+      document.getElementById('update-banner')?.classList.toggle('hidden', !data.available);
+      if (data.available && data.localVersion) {
+        const sub = document.getElementById('update-banner-sub');
+        if (sub) sub.textContent = `Versão atual: v${data.localVersion} → nova versão disponível. Clique para atualizar.`;
+      }
     } catch (_) {}
   }
 
   document.getElementById('update-badge-btn')?.addEventListener('click', () => openUpdateModal());
   document.getElementById('update-alert-nav')?.addEventListener('click', () => openUpdateModal());
+  document.getElementById('update-banner')?.addEventListener('click', () => openUpdateModal());
 
   function openUpdateModal() {
     const modal = document.getElementById('update-modal');
@@ -1878,6 +1895,7 @@ Execute em ordem no Cursor. Aguarde cada etapa antes da próxima.
         if (btn) btn.textContent = '✓ Concluído';
         document.getElementById('update-badge-btn')?.classList.add('hidden');
         document.getElementById('update-alert-nav')?.classList.add('hidden');
+        document.getElementById('update-banner')?.classList.add('hidden');
         _updateData = null;
       } else {
         if (statusEl) statusEl.textContent = `Erro: ${data.error || 'Falha ao aplicar. Tente manualmente.'}`;
