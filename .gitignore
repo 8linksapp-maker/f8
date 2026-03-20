@@ -45,3 +45,6 @@ tema-*.zip
 public/reference/
 **/public/reference/
 
+
+# Resumo local (contexto de chat)
+resumo.md
